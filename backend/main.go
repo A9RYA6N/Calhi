@@ -1,13 +1,24 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"os"
+
+	"github.com/A9RYA6N/Calhi/backend/api/db"
+	"github.com/A9RYA6N/Calhi/backend/api/routes"
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+)
 
 func main() {
-  router := gin.Default()
-  router.GET("/ping", func(c *gin.Context) {
+  godotenv.Load()
+  port:=os.Getenv("PORT")
+  db.ConnectDB()
+  // db.Migrate()
+  router:=routes.RouterCreator()
+  router.GET("/", func(c *gin.Context) {
     c.JSON(200, gin.H{
-      "message": "pong",
+      "message":"Hello",
     })
   })
-  router.Run() // listens on 0.0.0.0:8080 by default
+  router.Run(":"+port)
 }
