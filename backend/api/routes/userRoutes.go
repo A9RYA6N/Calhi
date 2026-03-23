@@ -5,9 +5,8 @@ import (
 	"github.com/A9RYA6N/Calhi/backend/api/controllers"
 )
 
-func RouterCreator() *gin.Engine{
-	router := gin.Default()
-	router.POST("/user/login", controllers.LoginUser)
-	router.POST("/user/register", controllers.RegisterUser)
-	return router
+func RegisterUserRoutes(router *gin.Engine){
+	userRoutes:=router.Group("/api/user")
+	userRoutes.POST("/login", controllers.LoginUser)
+	userRoutes.POST("/register", controllers.RegisterUser)
 }

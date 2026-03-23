@@ -12,7 +12,7 @@ func LoginUser(c *gin.Context){
 	var req structs.LoginRequest
 	if err := c.ShouldBindJSON(&req);err!=nil{
 		c.JSON(400, gin.H{
-			"error": "Invalid request body",
+			"message": "Invalid request body",
 		})
 		return
 	}
@@ -24,7 +24,7 @@ func LoginUser(c *gin.Context){
 	result := db.DB.Where("email = ?", email).First(&user)
 	if result.Error != nil {
 		c.JSON(401, gin.H{
-			"error": "Invalid email",
+			"message": "Invalid email",
 		})
 		return
 	}
@@ -32,7 +32,7 @@ func LoginUser(c *gin.Context){
 	fmt.Println(match)
 	if match!=true{
 		c.JSON(401, gin.H{
-			"error": "Invalid password",
+			"message": "Invalid password",
 		})
 		return
 	}
@@ -46,7 +46,7 @@ func RegisterUser(c *gin.Context){
 	var req structs.RegisterRequest
 	if err:=c.ShouldBindJSON(&req); err!=nil{
 		c.JSON(400, gin.H{
-			"error": "Invalid request body",
+			"message": "Invalid request body",
 		})
 		return
 	}
@@ -56,7 +56,7 @@ func RegisterUser(c *gin.Context){
 	checkIfPresent := db.DB.Where("email = ?", req.Email).First(&userExist)
 	if checkIfPresent.Error == nil {
 		c.JSON(401, gin.H{
-			"error": "Email already registered",
+			"message": "Email already registered",
 		})
 		return
 	}
@@ -72,7 +72,7 @@ func RegisterUser(c *gin.Context){
 
 	if result.Error != nil {
 		c.JSON(500, gin.H{
-			"error": "Failed to create user",
+			"message": "Failed to create user",
 		})
 		return
 	}
