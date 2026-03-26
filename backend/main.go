@@ -1,19 +1,19 @@
 package main
 
 import (
-	"os"
-
 	"github.com/A9RYA6N/Calhi/backend/api/db"
 	"github.com/A9RYA6N/Calhi/backend/api/middlewares"
 	"github.com/A9RYA6N/Calhi/backend/api/routes"
+	"github.com/A9RYA6N/Calhi/backend/api/services"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
-func main() {
-  godotenv.Load()
-  port:=os.Getenv("PORT")
+func init(){
+  services.LoadEnvVariables()
   db.ConnectDB()
+}
+
+func main() {
   // db.Migrate()
   router := gin.Default()
 	router.Use(middlewares.CORSMiddleware())
@@ -23,5 +23,5 @@ func main() {
       "message":"Hello",
     })
   })
-  router.Run(":"+port)
+  router.Run()
 }
