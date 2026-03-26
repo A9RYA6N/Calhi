@@ -1,13 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>frontend</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
   </head>
-  <body>
-    <div id="root"></div>
+  <body class="bg-background-dark min-h-screen flex flex-col overflow-x-hidden selection:bg-primary/30 selection:text-white">
+    <!-- Background Ambient Glows -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div class="bg-glow-spot w-125 h-125 bg-primary/20 -top-25 left-[20%] animate-pulse" style="animation-duration: 4s;"></div>
+        <div class="bg-glow-spot w-150 h-150 bg-secondary/10 bottom-0 right-0"></div>
+    </div>
+    <div id="root" class="w-full grow flex flex-col"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

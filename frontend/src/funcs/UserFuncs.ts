@@ -6,7 +6,7 @@ export const login=async (email:string, password:string):Promise<{success:boolea
             email,
             password
         }
-        const response=await axios({
+        await axios({
             method:"POST",
             url: `${import.meta.env.VITE_BACKEND_USER}/login`,
             data: apiObj,
