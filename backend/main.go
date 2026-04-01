@@ -18,6 +18,7 @@ func main() {
   router := gin.Default()
 	router.Use(middlewares.CORSMiddleware())
   routes.RegisterUserRoutes(router)
+  routes.RegisterTimeslotRoutes(router)
   router.GET("/", func(c *gin.Context) {
     c.JSON(200, gin.H{
       "message":"Hello",

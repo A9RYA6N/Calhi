@@ -109,10 +109,18 @@ func Logout(c *gin.Context){
 	})
 }
 
+func GetUser(c *gin.Context){
+	user, _:=c.Get("user")
+	c.JSON(200, gin.H{
+		"message":"Got user",
+		"data":user,
+	})
+}
+
 func TestAuth(c *gin.Context){
 	user, _:=c.Get("user")
 	c.JSON(200, gin.H{
 		"message":"Logged in",
-		"user":user,
+		"data":user,
 	})
 }
