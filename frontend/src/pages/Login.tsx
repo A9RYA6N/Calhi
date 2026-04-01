@@ -1,6 +1,6 @@
 import { useNavigate, Link } from "react-router-dom"
 import GenFooter from "../components/GenFooter"
-import HPHeader from "../components/HPHeader"
+import HPHeader from "../components/GenHeader"
 import { login } from "../funcs/UserFuncs"
 import { useState, useEffect } from "react"
 import toast, { Toaster } from 'react-hot-toast';

@@ -21,7 +21,7 @@ const DashboardRecentActivity = () => {
                     </div>
                     <div className="flex-1 rounded-xl bg-[#2e2839]/30 p-3 hover:bg-[#2e2839]/50 transition-colors cursor-pointer">
                         <div className="flex justify-between items-start mb-1">
-                            <p className="text-sm font-semibold text-white">Booking Confirmed</p>
+                            <p className="text-sm font-semibold text-white">Timeslot Confirmed</p>
                             <span className="text-[10px] text-[#a79db9]">2m ago</span>
                         </div>
                         <p className="text-xs text-[#a79db9]">Meeting with <span className="text-white font-medium">Acme Corp</span> confirmed for tomorrow at 2:00 PM.</p>

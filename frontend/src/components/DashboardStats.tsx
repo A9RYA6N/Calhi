@@ -1,12 +1,16 @@
-const DashboardStats = () => {
+interface DashboardStatsProps {
+    timeslotsCount: number;
+}
+
+const DashboardStats = ({ timeslotsCount }: DashboardStatsProps) => {
     return (
         <section className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {/* Card 1 */}
             <div className="glass-card relative overflow-hidden rounded-2xl p-6 transition-transform hover:-translate-y-1 duration-300">
                 <div className="flex items-start justify-between">
                     <div>
-                        <p className="text-sm font-medium text-[#a79db9]">Upcoming Bookings</p>
-                        <h3 className="mt-2 text-3xl font-bold text-white">24</h3>
+                        <p className="text-sm font-medium text-[#a79db9]">Upcoming Timeslots</p>
+                        <h3 className="mt-2 text-3xl font-bold text-white">{timeslotsCount}</h3>
                     </div>
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20 text-primary">
                         <span className="material-symbols-outlined">event_available</span>

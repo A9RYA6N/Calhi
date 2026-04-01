@@ -1,13 +1,55 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import DashboardSidebar from "../components/DashboardSidebar";
 import DashboardHeader from "../components/DashboardHeader";
 import DashboardStats from "../components/DashboardStats";
 import DashboardWeeklyOutlook from "../components/DashboardWeeklyOutlook";
 import DashboardRecentActivity from "../components/DashboardRecentActivity";
+import TimeslotModal from "../components/TimeslotModal";
+
+export interface Timeslot {
+    ID: number;
+    Start: string;
+    End: string;
+}
 
 const Dashboard = () => {
+    const navigate = useNavigate();
+    const [isTimeslotModalOpen, setIsTimeslotModalOpen] = useState(false);
+    const [userName, setUserName] = useState<string>("Loading...");
+    const [Timeslots, setTimeslots] = useState<Timeslot[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const userRes = await axios.get(`${import.meta.env.VITE_BACKEND_USER}/`, { withCredentials: true });
+                if (userRes.data?.data?.Name) {
+                    setUserName(userRes.data.data.Name);
+                }
+            } catch (err) {
+                console.error("Failed to fetch user, redirecting:", err);
+                navigate("/");
+                return; // Stop fetching Timeslots if user is unauthorized
+            }
+
+            try {
+                const TimeslotRes = await axios.get(`${import.meta.env.VITE_BACKEND_Timeslot}/`, { withCredentials: true });
+                if (TimeslotRes.data?.Timeslots) {
+                    setTimeslots(TimeslotRes.data.Timeslots);
+                }
+            } catch (err) {
+                console.error("Failed to fetch Timeslots:", err);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     return (
-        <div className="flex h-screen w-full overflow-hidden bg-background-light dark:bg-background-dark text-gray-900 dark:text-[#E5E7EB] font-body antialiased selection:bg-primary selection:text-white">
-            <DashboardSidebar />
+        <>
+            <div className="flex h-screen w-full overflow-hidden bg-background-light dark:bg-background-dark text-gray-900 dark:text-[#E5E7EB] font-body antialiased selection:bg-primary selection:text-white">
+                <DashboardSidebar userName={userName} onNewTimeslot={() => setIsTimeslotModalOpen(true)} />
 
             <main className="flex flex-1 flex-col overflow-hidden bg-background-light dark:bg-background-dark relative">
                 
@@ -15,17 +57,17 @@ const Dashboard = () => {
                 <div className="pointer-events-none absolute top-[-20%] left-[20%] h-125 w-125 rounded-full bg-primary/5 blur-[120px]"></div>
                 <div className="pointer-events-none absolute bottom-[-10%] right-[-10%] h-100 w-100 rounded-full bg-blue-600/5 blur-[100px]"></div>
 
-                <DashboardHeader />
+                <DashboardHeader userName={userName} />
 
                 {/* Scrollable Content */}
                 <div className="flex-1 overflow-y-auto p-8 custom-scrollbar relative z-0">
                     <div className="mx-auto flex max-w-7xl flex-col gap-8">
                         
-                        <DashboardStats />
+                        <DashboardStats TimeslotsCount={Timeslots.length} />
 
                         {/* Main Dashboard Grid */}
                         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                            <DashboardWeeklyOutlook />
+                            <DashboardWeeklyOutlook Timeslots={Timeslots} />
                             <DashboardRecentActivity />
                         </div>
 
@@ -46,7 +88,10 @@ const Dashboard = () => {
                     </div>
                 </div>
             </main>
-        </div>
+            </div>
+            
+            <TimeslotModal isOpen={isTimeslotModalOpen} onClose={() => setIsTimeslotModalOpen(false)} />
+        </>
     );
 };
 

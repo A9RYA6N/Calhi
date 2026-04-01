@@ -1,18 +1,59 @@
-const DashboardWeeklyOutlook = () => {
+import { useState, useMemo } from 'react';
+import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, isSameDay } from 'date-fns';
+import type { Timeslot } from "../pages/Dashboard";
+
+interface DashboardWeeklyOutlookProps {
+    Timeslots: Timeslot[];
+}
+
+const DashboardWeeklyOutlook = ({ Timeslots }: DashboardWeeklyOutlookProps) => {
+    const [currentDate, setCurrentDate] = useState(new Date());
+
+    const handlePreviousWeek = () => setCurrentDate(subWeeks(currentDate, 1));
+    const handleNextWeek = () => setCurrentDate(addWeeks(currentDate, 1));
+
+    // Get an array of the 7 days for the current week starting from Monday
+    const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
+    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
+
+    const weekDays = useMemo(() => {
+        return Array.from({ length: 7 }).map((_, i) => {
+            const date = new Date(weekStart);
+            date.setDate(date.getDate() + i);
+            return date;
+        });
+    }, [weekStart]);
+
+    const dateRangeLabel = `${format(weekStart, 'MMM d')} - ${format(weekEnd, 'MMM d')}`;
+
+    const calculateTopAndHeight = (startString: string, endString: string) => {
+        const start = new Date(startString);
+        const end = new Date(endString);
+        
+        // Timeline is 8:00 AM to 8:00 PM (12 hours)
+        const startHourOffset = start.getHours() + (start.getMinutes() / 60) - 8;
+        const durationHours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+        
+        const topPercentage = Math.max(0, Math.min(100, (startHourOffset / 12) * 100));
+        const heightPercentage = Math.max(0, Math.min(100, (durationHours / 12) * 100));
+        
+        return { top: `${topPercentage}%`, height: `${heightPercentage}%` };
+    };
+
     return (
         <div className="glass-card rounded-2xl p-6 lg:col-span-2 flex flex-col h-full min-h-100">
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-bold text-white">Weekly Outlook</h3>
                 <div className="flex items-center gap-2">
-                    <button className="p-1 text-[#a79db9] hover:text-white hover:bg-[#2e2839] rounded-lg">
+                    <button onClick={handlePreviousWeek} className="p-1 text-[#a79db9] hover:text-white hover:bg-[#2e2839] rounded-lg transition-colors">
                         <span className="material-symbols-outlined text-[20px]">chevron_left</span>
                     </button>
-                    <span className="text-sm font-medium text-white">Oct 12 - 18</span>
-                    <button className="p-1 text-[#a79db9] hover:text-white hover:bg-[#2e2839] rounded-lg">
+                    <span className="text-sm font-medium text-white">{dateRangeLabel}</span>
+                    <button onClick={handleNextWeek} className="p-1 text-[#a79db9] hover:text-white hover:bg-[#2e2839] rounded-lg transition-colors">
                         <span className="material-symbols-outlined text-[20px]">chevron_right</span>
                     </button>
-                    <button className="ml-2 text-xs font-medium bg-[#2e2839] hover:bg-[#3f374e] text-white px-3 py-1.5 rounded-lg transition-colors">
-                        View Full
+                    <button onClick={() => setCurrentDate(new Date())} className="ml-2 text-xs font-medium bg-[#2e2839] hover:bg-[#3f374e] text-white px-3 py-1.5 rounded-lg transition-colors">
+                        Today
                     </button>
                 </div>
             </div>
@@ -21,13 +62,11 @@ const DashboardWeeklyOutlook = () => {
             <div className="flex flex-1 flex-col gap-4">
                 {/* Days Header */}
                 <div className="grid grid-cols-7 gap-2 text-center text-xs font-medium text-[#a79db9] border-b border-[#2e2839] pb-2 pl-15">
-                    <div>Mon</div>
-                    <div>Tue</div>
-                    <div>Wed</div>
-                    <div>Thu</div>
-                    <div className="text-primary font-bold">Fri</div>
-                    <div>Sat</div>
-                    <div>Sun</div>
+                    {weekDays.map((day, idx) => (
+                        <div key={idx} className={isSameDay(day, new Date()) ? "text-primary font-bold" : ""}>
+                            {format(day, 'EEE')}
+                        </div>
+                    ))}
                 </div>
 
                 {/* Timeline Grid */}
@@ -56,45 +95,37 @@ const DashboardWeeklyOutlook = () => {
                         ))}
                     </div>
 
-                    {/* Mon */}
-                    <div className="relative pt-2">
-                        <div className="absolute top-[10%] left-0 right-0 h-[30%] bg-[#2e2839] rounded-md border border-[#443b54] mx-1"></div>
-                        <div className="absolute top-[50%] left-0 right-0 h-[20%] bg-blue-500/20 border border-blue-500/30 rounded-md mx-1"></div>
-                    </div>
+                    {/* Render Columns */}
+                    {weekDays.map((targetDate, index) => {
+                        const dayTimeslots = Timeslots.filter(b => isSameDay(new Date(b.Start), targetDate));
+                        const isToday = isSameDay(targetDate, new Date());
 
-                    {/* Tue */}
-                    <div className="relative pt-2">
-                        <div className="absolute top-[20%] left-0 right-0 h-[40%] bg-primary/20 border border-primary/30 rounded-md mx-1"></div>
-                    </div>
-
-                    {/* Wed */}
-                    <div className="relative pt-2">
-                        <div className="absolute top-[10%] left-0 right-0 h-[20%] bg-[#2e2839] rounded-md border border-[#443b54] mx-1"></div>
-                        <div className="absolute top-[60%] left-0 right-0 h-[25%] bg-primary/20 border border-primary/30 rounded-md mx-1"></div>
-                    </div>
-
-                    {/* Thu */}
-                    <div className="relative pt-2">
-                        <div className="absolute top-[30%] left-0 right-0 h-[50%] bg-[#2e2839] rounded-md border border-[#443b54] mx-1"></div>
-                    </div>
-
-                    {/* Fri (Today) */}
-                    <div className="relative pt-2 bg-[#1e1b24]/50 rounded-lg">
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-primary rounded-full mt-1"></div>
-                        <div className="absolute top-[15%] left-0 right-0 h-[20%] bg-linear-to-b from-primary/30 to-primary/10 border border-primary/40 rounded-md mx-1 flex items-center justify-center">
-                            <span className="text-[8px] font-bold text-white/80">Meeting</span>
-                        </div>
-                        <div className="absolute top-[45%] left-0 right-0 h-[30%] bg-[#2e2839] rounded-md border border-[#443b54] mx-1"></div>
-                    </div>
-
-                    {/* Sat */}
-                    <div className="relative pt-2 opacity-50"></div>
-
-                    {/* Sun */}
-                    <div className="relative pt-2 opacity-50"></div>
+                        return (
+                            <div key={index} className={`relative pt-2 ${isToday ? 'bg-[#1e1b24]/50 rounded-lg' : ''}`}>
+                                {isToday && (
+                                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-primary rounded-full mt-1"></div>
+                                )}
+                                {dayTimeslots.map(Timeslot => {
+                                    const { top, height } = calculateTopAndHeight(Timeslot.Start, Timeslot.End);
+                                    return (
+                                        <div 
+                                            key={Timeslot.ID} 
+                                            className="absolute left-0 right-0 bg-linear-to-b from-primary/30 to-primary/10 border border-primary/40 rounded-md mx-1 flex items-center justify-center overflow-hidden hover:from-primary/50 hover:to-primary/20 transition-colors cursor-pointer" 
+                                            style={{ top, height }}
+                                        >
+                                            <span className="text-[10px] sm:text-xs font-bold text-white line-clamp-2 px-1 text-center">
+                                                Timeslot
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </div>
     );
 };
+
 export default DashboardWeeklyOutlook;

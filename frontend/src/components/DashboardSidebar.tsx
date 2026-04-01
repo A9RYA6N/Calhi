@@ -1,4 +1,9 @@
-const DashboardSidebar = () => {
+interface DashboardSidebarProps {
+    onNewTimeslot: () => void;
+    userName?: string;
+}
+
+const DashboardSidebar = ({ onNewTimeslot, userName }: DashboardSidebarProps) => {
     return (
         <aside className="hidden w-64 flex-col border-r border-[#2e2839] bg-[#131118] lg:flex">
             <div className="flex h-16 items-center gap-3 px-6 border-b border-[#2e2839]/50">
@@ -56,15 +61,15 @@ const DashboardSidebar = () => {
                                 <img alt="Profile picture of Alex" className="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgH2AUMiJPnwVia6_-v1rDaoRlUAIWMcqQlqYE1ZhNDWTOF1eFmwEvdlaXf7LSrqlaZvpUJndoIwlqb3R_bKb8Vi6_f2jT66MvtedEcX9kO46sRbCsddcTp6rosVlb0aFIZGRNgJw8qzjR4nbXAzZKzHGiCwLMy2hf-QVLKZF3FSQnC9jcKrkFn8KaDYUE-tdqt2K74-bm_RwYeeQI9tGU_X8dGH3ZpOU4ort6TkCl0HOUy_1qFy930r0IyJFtHSOt7IUS5x0cf5k"/>
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-sm font-semibold text-white">Alex Morgan</span>
+                                <span className="text-sm font-semibold text-white">{userName || "Alex Morgan"}</span>
                                 <span className="text-xs text-[#a79db9]">Pro Plan</span>
                             </div>
                         </div>
                     </div>
 
-                    <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-bold text-white shadow-lg shadow-primary/25 transition-transform hover:scale-[1.02] active:scale-[0.98]">
+                    <button onClick={onNewTimeslot} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-bold text-white shadow-lg shadow-primary/25 transition-transform hover:scale-[1.02] active:scale-[0.98]">
                         <span className="material-symbols-outlined text-[20px]">add</span>
-                        New Booking
+                        New Timeslot
                     </button>
                 </div>
             </div>

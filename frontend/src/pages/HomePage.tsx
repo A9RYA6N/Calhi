@@ -1,4 +1,4 @@
-import HPHeader from "../components/HPHeader";
+import HPHeader from "../components/GenHeader";
 import GenFooter from "../components/GenFooter";
 
 const HomePage = () => {
@@ -21,7 +21,7 @@ const HomePage = () => {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                             <button className="btn-gradient h-12 px-8 rounded-xl text-white font-bold text-base shadow-lg shadow-primary/25 hover:scale-105 transition-transform">
-                                Start Booking Free
+                                Start Timeslot Free
                             </button>
                             <button className="h-12 px-8 rounded-xl bg-surface-dark border border-white/10 text-white font-medium hover:bg-white/5 transition-colors flex items-center justify-center gap-2">
                                 <span className="material-symbols-outlined text-[20px]">play_circle</span>
@@ -103,7 +103,7 @@ const HomePage = () => {
                                 </div>
                                 <h3 className="text-xl font-bold text-white mb-3">Conflict Detection</h3>
                                 <p className="text-gray-400 leading-relaxed">
-                                    Smart algorithms detect potential double-bookings before they happen, offering intelligent resolution suggestions.
+                                    Smart algorithms detect potential double-Timeslots before they happen, offering intelligent resolution suggestions.
                                 </p>
                             </div>
                             {/* Feature 3 */}
@@ -150,7 +150,7 @@ const HomePage = () => {
                                         </div>
                                         <div>
                                             <h4 className="text-white font-semibold">Context-Aware Links</h4>
-                                            <p className="text-sm text-gray-500">Send unique booking links that only show relevant slots.</p>
+                                            <p className="text-sm text-gray-500">Send unique Timeslot links that only show relevant slots.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -261,7 +261,7 @@ const HomePage = () => {
                         <p className="mt-4 text-sm text-gray-500">No credit card required. 14-day free trial.</p>
                     </div>
                     {/* Background decoration for CTA */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-3xl max-h-75 bg-linear-to-r from-primary/10 via-secondary/10 to-primary/10 blur-[100px] -z-0"></div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-3xl max-h-75 bg-linear-to-r from-primary/10 via-secondary/10 to-primary/10 blur-[100px] z-0"></div>
                 </section>
             </main>
             <GenFooter />
