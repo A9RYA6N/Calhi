@@ -6,7 +6,7 @@ import DashboardHeader from "../components/DashboardHeader";
 import DashboardStats from "../components/DashboardStats";
 import DashboardWeeklyOutlook from "../components/DashboardWeeklyOutlook";
 import DashboardRecentActivity from "../components/DashboardRecentActivity";
-import TimeslotModal from "../components/TimeslotModal";
+import TimeslotModal from '@/components/TimeslotModal';
 
 export interface Timeslot {
     ID: number;
@@ -18,7 +18,7 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const [isTimeslotModalOpen, setIsTimeslotModalOpen] = useState(false);
     const [userName, setUserName] = useState<string>("Loading...");
-    const [Timeslots, setTimeslots] = useState<Timeslot[]>([]);
+    const [timeslots, setTimeslots] = useState<Timeslot[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -34,9 +34,9 @@ const Dashboard = () => {
             }
 
             try {
-                const TimeslotRes = await axios.get(`${import.meta.env.VITE_BACKEND_Timeslot}/`, { withCredentials: true });
-                if (TimeslotRes.data?.Timeslots) {
-                    setTimeslots(TimeslotRes.data.Timeslots);
+                const TimeslotRes = await axios.get(`${import.meta.env.VITE_BACKEND_TIMESLOT}/`, { withCredentials: true });
+                if (TimeslotRes.data?.data) {
+                    setTimeslots(TimeslotRes.data.data);
                 }
             } catch (err) {
                 console.error("Failed to fetch Timeslots:", err);
@@ -63,11 +63,11 @@ const Dashboard = () => {
                 <div className="flex-1 overflow-y-auto p-8 custom-scrollbar relative z-0">
                     <div className="mx-auto flex max-w-7xl flex-col gap-8">
                         
-                        <DashboardStats TimeslotsCount={Timeslots.length} />
+                        <DashboardStats timeslotsCount={timeslots.length} />
 
                         {/* Main Dashboard Grid */}
                         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                            <DashboardWeeklyOutlook Timeslots={Timeslots} />
+                            <DashboardWeeklyOutlook Timeslots={timeslots} />
                             <DashboardRecentActivity />
                         </div>
 

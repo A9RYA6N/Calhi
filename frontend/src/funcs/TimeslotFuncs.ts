@@ -18,7 +18,7 @@ export const createTimeslot = async (date: Date, startTime: string, endTime: str
 
         await axios({
             method: "POST",
-            url: `${import.meta.env.VITE_BACKEND_Timeslot}/create`,
+            url: `${import.meta.env.VITE_BACKEND_TIMESLOT}/create`,
             data: apiObj,
             withCredentials: true,
         });
