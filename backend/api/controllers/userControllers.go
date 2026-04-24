@@ -146,7 +146,7 @@ func TestAuth(c *gin.Context){
 	user, _:=c.Get("user")
 	c.JSON(200, gin.H{
 		"success":true,
-		"message":"Logged in",
+		"message":"Logged ins",
 		"data":user,
 	})
 }
