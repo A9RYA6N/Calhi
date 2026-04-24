@@ -12,12 +12,30 @@ type User struct{
 	Email string `gorm:"uniqueIndex;not null"`
 	Password string `gorm:"not null"  json:"-"`
 	Name string `gorm:"not null"`
+	UserName string `gorm:"unique; not null"`
 }
 
 type Timeslot struct{
 	gorm.Model
 
-	UserId uint `gorm:"not null"`
+	UserID uint `gorm:"uniqueIndex:idx_user_slug;not null"`
+	EventName string `gorm:"not null"`
+	Slug string `gorm:"uniqueIndex:idx_user_slug;not null"`
+	Start time.Time `gorm:"not null"`
+	End time.Time `gorm:"not null"`
+	Duration int `gorm:"not null"`
+
+	Bookings []Booking `gorm:"foreignKey:TimeslotID"`
+}
+
+type Booking struct{
+	gorm.Model
+
+	TimeslotID uint `gorm:"not null;index"`
+
+	ClientName string `gorm:"not null"`
+	ClientEmail string `gorm:"not null"`
+
 	Start time.Time `gorm:"not null"`
 	End time.Time `gorm:"not null"`
 }

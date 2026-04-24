@@ -10,6 +10,8 @@ const Register = () => {
     const [email, setEmail]=useState("");
     const [password, setPassword]=useState("");
     const [name, setName]=useState("");
+    const [username, setUsername]=useState("");
+    const [showPassword, setShowPassword]=useState(false);
     const [isLoading, setIsLoading]=useState(false);
     const [error, setError]=useState("")
 
@@ -28,9 +30,13 @@ const Register = () => {
     const handleRegister=async(e: any)=>{
         e.preventDefault()
         setError("")
-        if(!email||!password)
+        if(!email||!password||!username)
         {
-            setError("Please enter both email and password");
+            setError("Please fill out all required fields.");
+            return;
+        }
+        if (username.includes(' ')) {
+            setError("Username cannot contain spaces.");
             return;
         }
         if (!email.includes('@')) {
@@ -38,7 +44,7 @@ const Register = () => {
             return;
         }
         setIsLoading(true);
-        const response=await register(email, password, name);
+        const response=await register(email, password, name, username);
         if(response.success){
             navigate('/dashboard')
         }
@@ -81,6 +87,21 @@ const Register = () => {
                                 </div>
                             </div>
                             
+                            {/* Username Input */}
+                            <div className="space-y-2">
+                                <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 ml-1">Username</label>
+                                <div className="relative group">
+                                    <input 
+                                        className="w-full bg-[#111111] border border-white/5 rounded-xl py-4 pr-4 pl-4 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300" 
+                                        placeholder="johndoe123" 
+                                        type="text"
+                                        value={username}
+                                        onChange={(e)=>setUsername(e.target.value.replace(/\s/g, ''))}
+                                        disabled={isLoading}
+                                    />
+                                </div>
+                            </div>
+                            
                             {/* Email Input */}
                             <div className="space-y-2">
                                 <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 ml-1">Email Address</label>
@@ -103,13 +124,19 @@ const Register = () => {
                                     <input 
                                         className="w-full bg-[#111111] border border-white/5 rounded-xl py-4 pr-12 pl-4 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300" 
                                         placeholder="••••••••" 
-                                        type="password"
+                                        type={showPassword ? "text" : "password"}
                                         value={password}
                                         onChange={(e)=>setPassword(e.target.value)}
                                         disabled={isLoading}
                                     />
-                                    <button className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors flex items-center" type="button">
-                                        <span className="material-symbols-outlined text-[20px]">visibility</span>
+                                    <button 
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors flex items-center" 
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        <span className="material-symbols-outlined text-[20px]">
+                                            {showPassword ? 'visibility_off' : 'visibility'}
+                                        </span>
                                     </button>
                                 </div>
                             </div>

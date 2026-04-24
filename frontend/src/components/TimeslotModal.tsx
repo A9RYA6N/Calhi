@@ -14,6 +14,8 @@ const TimeslotModal: React.FC<TimeslotModalProps> = ({ isOpen, onClose }) => {
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [startTime, setStartTime] = useState("09:00");
     const [endTime, setEndTime] = useState("21:00");
+    const [eventName, setEventName] = useState("");
+    const [duration, setDuration] = useState("30");
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -33,7 +35,7 @@ const TimeslotModal: React.FC<TimeslotModalProps> = ({ isOpen, onClose }) => {
             return;
         }
         setIsSubmitting(true);
-        const response = await createTimeslot(date, startTime, endTime);
+        const response = await createTimeslot(date, startTime, endTime, eventName, parseInt(duration, 10));
         setIsSubmitting(false);
 
         if (response.success) {
@@ -46,7 +48,7 @@ const TimeslotModal: React.FC<TimeslotModalProps> = ({ isOpen, onClose }) => {
 
     return (
         <div 
-            className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-4"
+            className="fixed inset-0 z-100 bg-black/80 backdrop-blur-md flex items-center justify-center p-4"
             onClick={onClose}
         >
             <div 
@@ -79,7 +81,7 @@ const TimeslotModal: React.FC<TimeslotModalProps> = ({ isOpen, onClose }) => {
                                 </span>
                                 <span className="material-symbols-outlined text-[#a79db9] transition-transform group-hover:rotate-180">expand_more</span>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0 z-[200] border-[#2e2839] bg-[#1e1b24] text-white" align="start">
+                            <PopoverContent className="w-auto p-0 z-200 border-[#2e2839] bg-[#1e1b24] text-white" align="start">
                                 <Calendar
                                     mode="single"
                                     selected={date}
@@ -89,6 +91,38 @@ const TimeslotModal: React.FC<TimeslotModalProps> = ({ isOpen, onClose }) => {
                                 />
                             </PopoverContent>
                         </Popover>
+                    </div>
+
+                    <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-violet-400 mb-3">Event Name</label>
+                        <label className="w-full h-14 glass-card px-5 rounded-xl flex items-center gap-3 border border-white/5 hover:bg-white/5 transition-all text-white focus-within:ring-2 focus-within:ring-blue-500/50 cursor-text">
+                            <span className="material-symbols-outlined text-violet-400 select-none">edit</span>
+                            <input 
+                                type="text"
+                                placeholder="Enter an event name"
+                                value={eventName}
+                                onChange={(e) => setEventName(e.target.value)}
+                                className="bg-transparent text-white font-medium border-none focus:outline-none w-full placeholder-[#a79db9]"
+                            />
+                        </label>
+                    </div>
+
+                    <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-violet-400 mb-3">Duration</label>
+                        <label className="w-full h-14 glass-card px-5 rounded-xl flex items-center gap-3 border border-white/5 hover:bg-white/5 transition-all text-white focus-within:ring-2 focus-within:ring-blue-500/50 cursor-pointer relative">
+                            <span className="material-symbols-outlined text-violet-400 select-none">hourglass_empty</span>
+                            <select
+                                value={duration}
+                                onChange={(e) => setDuration(e.target.value)}
+                                className="bg-transparent text-white font-medium border-none focus:outline-none w-full appearance-none cursor-pointer pr-8"
+                            >
+                                <option value="15" className="bg-[#1e1b24]">15 minutes</option>
+                                <option value="30" className="bg-[#1e1b24]">30 minutes</option>
+                                <option value="60" className="bg-[#1e1b24]">1 hour</option>
+                                <option value="120" className="bg-[#1e1b24]">2 hours</option>
+                            </select>
+                            <span className="material-symbols-outlined text-[#a79db9] pointer-events-none absolute right-5">expand_more</span>
+                        </label>
                     </div>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative">

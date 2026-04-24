@@ -18,13 +18,14 @@ export const login=async (email:string, password:string):Promise<{success:boolea
     }
 }
 
-export const register=async(email:string, password:string, name:string):Promise<{success:boolean, message:string}>=>{
+export const register=async(email:string, password:string, name:string, username:string):Promise<{success:boolean, message:string}>=>{
     let response
     try {
         const apiObj={
             email,
             password,
-            name
+            name,
+            username
         }
         response=await axios({
             method:"POST",

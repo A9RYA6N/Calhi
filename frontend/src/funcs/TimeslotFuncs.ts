@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const createTimeslot = async (date: Date, startTime: string, endTime: string): Promise<{ success: boolean; message: string }> => {
+export const createTimeslot = async (date: Date, startTime: string, endTime: string, eventName: string, duration: number): Promise<{ success: boolean; message: string }> => {
     try {
         const [startHours, startMinutes] = startTime.split(':').map(Number);
         const [endHours, endMinutes] = endTime.split(':').map(Number);
@@ -13,12 +13,14 @@ export const createTimeslot = async (date: Date, startTime: string, endTime: str
 
         const apiObj = {
             start: startDateTime.toISOString(),
-            end: endDateTime.toISOString()
+            end: endDateTime.toISOString(),
+            eventname: eventName,
+            duration: duration
         };
 
         await axios({
             method: "POST",
-            url: `${import.meta.env.VITE_BACKEND_Timeslot}/create`,
+            url: `${import.meta.env.VITE_BACKEND_TIMESLOT}/create`,
             data: apiObj,
             withCredentials: true,
         });

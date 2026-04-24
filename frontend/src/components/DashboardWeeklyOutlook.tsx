@@ -114,7 +114,7 @@ const DashboardWeeklyOutlook = ({ Timeslots }: DashboardWeeklyOutlookProps) => {
                                             style={{ top, height }}
                                         >
                                             <span className="text-[10px] sm:text-xs font-bold text-white line-clamp-2 px-1 text-center">
-                                                Timeslot
+                                                {Timeslot.EventName || "Timeslot"}
                                             </span>
                                         </div>
                                     );

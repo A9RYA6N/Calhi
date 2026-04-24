@@ -9,5 +9,7 @@ import (
 func RegisterTimeslotRoutes(router *gin.Engine){
 	timeslotRoutes:=router.Group("/api/timeslot", middlewares.AuthChecker)
 	timeslotRoutes.POST("/create", controllers.CreateTimeslot)
-	timeslotRoutes.GET("/", controllers.GetTimeslot)
+	timeslotRoutes.GET("/", controllers.GetTimeslots)
+
+	router.GET("/api/timeslot/:username", controllers.GetUserTimeslots)
 }

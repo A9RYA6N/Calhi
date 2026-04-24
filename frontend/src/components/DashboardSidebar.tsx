@@ -1,9 +1,25 @@
+import { useState } from 'react';
+import axios from 'axios';
+
 interface DashboardSidebarProps {
     onNewTimeslot: () => void;
     userName?: string;
 }
 
 const DashboardSidebar = ({ onNewTimeslot, userName }: DashboardSidebarProps) => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const handleLogout = async () => {
+        try {
+            await axios.get(`${import.meta.env.VITE_BACKEND_USER}/logout`, { withCredentials: true });
+            window.location.reload();
+        } catch (error) {
+            console.error("Logout failed", error);
+            // Optionally reload anyway to clear local client states
+            window.location.reload();
+        }
+    };
+
     return (
         <aside className="hidden w-64 flex-col border-r border-[#2e2839] bg-[#131118] lg:flex">
             <div className="flex h-16 items-center gap-3 px-6 border-b border-[#2e2839]/50">
@@ -54,16 +70,40 @@ const DashboardSidebar = ({ onNewTimeslot, userName }: DashboardSidebarProps) =>
                     </a>
                 </nav>
 
-                <div className="mt-auto flex flex-col gap-4">
-                    <div className="glass-card rounded-xl p-4">
-                        <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 overflow-hidden rounded-full border border-white/10">
-                                <img alt="Profile picture of Alex" className="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgH2AUMiJPnwVia6_-v1rDaoRlUAIWMcqQlqYE1ZhNDWTOF1eFmwEvdlaXf7LSrqlaZvpUJndoIwlqb3R_bKb8Vi6_f2jT66MvtedEcX9kO46sRbCsddcTp6rosVlb0aFIZGRNgJw8qzjR4nbXAzZKzHGiCwLMy2hf-QVLKZF3FSQnC9jcKrkFn8KaDYUE-tdqt2K74-bm_RwYeeQI9tGU_X8dGH3ZpOU4ort6TkCl0HOUy_1qFy930r0IyJFtHSOt7IUS5x0cf5k"/>
+                <div className="mt-auto flex flex-col gap-4 relative">
+                    
+                    {/* Logout Menu Popup */}
+                    {isMenuOpen && (
+                        <div className="absolute bottom-[140px] left-0 right-0 bg-[#1e1b24] rounded-xl border border-red-500/30 p-2 shadow-2xl z-50 transform transition-all animate-in slide-in-from-bottom-2 fade-in">
+                            <button 
+                                onClick={handleLogout}
+                                className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-500/10 rounded-lg transition-colors text-left"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-[18px]">logout</span>
+                                    <span>Logout</span>
+                                </div>
+                            </button>
+                        </div>
+                    )}
+
+                    <div 
+                        className="glass-card rounded-xl p-4 cursor-pointer hover:bg-white/5 transition-colors select-none"
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    >
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="h-10 w-10 overflow-hidden rounded-full border border-white/10">
+                                    <img alt="Profile picture of Alex" className="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgH2AUMiJPnwVia6_-v1rDaoRlUAIWMcqQlqYE1ZhNDWTOF1eFmwEvdlaXf7LSrqlaZvpUJndoIwlqb3R_bKb8Vi6_f2jT66MvtedEcX9kO46sRbCsddcTp6rosVlb0aFIZGRNgJw8qzjR4nbXAzZKzHGiCwLMy2hf-QVLKZF3FSQnC9jcKrkFn8KaDYUE-tdqt2K74-bm_RwYeeQI9tGU_X8dGH3ZpOU4ort6TkCl0HOUy_1qFy930r0IyJFtHSOt7IUS5x0cf5k"/>
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-semibold text-white">{userName || "Alex Morgan"}</span>
+                                    <span className="text-xs text-[#a79db9]">Pro Plan</span>
+                                </div>
                             </div>
-                            <div className="flex flex-col">
-                                <span className="text-sm font-semibold text-white">{userName || "Alex Morgan"}</span>
-                                <span className="text-xs text-[#a79db9]">Pro Plan</span>
-                            </div>
+                            <span className="material-symbols-outlined text-[#a79db9] text-[20px] transition-transform duration-200" style={{ transform: isMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                                expand_less
+                            </span>
                         </div>
                     </div>
 

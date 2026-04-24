@@ -46,8 +46,8 @@ func AuthChecker(c *gin.Context){
 		}
 
 		c.Set("user", user)
-		fmt.Println(user)
-		fmt.Println(claims["foo"], claims["nbf"])		
+		// fmt.Println(user)
+		// fmt.Println(claims["foo"], claims["nbf"])		
 
 		c.Next()
 	}else{
@@ -56,4 +56,37 @@ func AuthChecker(c *gin.Context){
 			"message":"Invalid access", 
 		})
 	}
+}
+
+func BookingsAuth(c *gin.Context) {
+	secret := os.Getenv("JWT_SECRET")
+
+	tokenString, err := c.Cookie("Authorization")
+	if err != nil {
+		// no token → guest
+		c.Set("user", nil)
+		c.Next()
+		return
+	}
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
+		return []byte(secret), nil
+	})
+
+	if err != nil || !token.Valid {
+		c.Set("user", nil)
+		c.Next()
+		return
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		var user db.User
+		db.DB.First(&user, claims["sub"])
+
+		if user.ID != 0 {
+			c.Set("user", user)
+		}
+	}
+
+	c.Next()
 }

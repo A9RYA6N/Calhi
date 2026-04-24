@@ -4,5 +4,6 @@ func Migrate() {
 	DB.AutoMigrate(
 		&User{},
 		&Timeslot{},
+		&Booking{},
 	)
 }
