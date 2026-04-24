@@ -38,4 +38,7 @@ type Booking struct{
 
 	Start time.Time `gorm:"not null"`
 	End time.Time `gorm:"not null"`
+
+	// Status string `gorm:"default:'pending'"`
+	// Token  string
 }

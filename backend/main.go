@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/A9RYA6N/Calhi/backend/api/db"
 	"github.com/A9RYA6N/Calhi/backend/api/middlewares"
 	"github.com/A9RYA6N/Calhi/backend/api/routes"
@@ -27,5 +29,10 @@ func main() {
       "message":"Hello",
     })
   })
-  router.Run()
+  port:=os.Getenv("PORT")
+  if port == "" {
+    port = "8080"
+  }
+  println("PORT:", port)
+  router.Run(":"+port)
 }
