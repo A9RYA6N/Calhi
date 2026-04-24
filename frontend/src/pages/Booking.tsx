@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 
 const Booking = () => {
     const [step, setStep] = useState(1);
-    const { username, slug } = useParams();
+    const { username } = useParams();
 
     return (
         <div className="bg-[#0a0a0a] text-white min-h-screen flex items-center justify-center relative overflow-hidden antialiased font-body">
