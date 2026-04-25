@@ -10,4 +10,5 @@ func RegisterBookingsRoutes(router *gin.Engine){
 	bookingsRoutes:=router.Group("/api/bookings")
 	bookingsRoutes.POST("/create", middlewares.BookingsAuth, controllers.CreateBooking)
 	bookingsRoutes.GET("/", controllers.CreateBooking)
+	bookingsRoutes.GET("/verify", controllers.VerifyBooking)
 }

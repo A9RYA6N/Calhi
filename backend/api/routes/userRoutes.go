@@ -14,4 +14,5 @@ func RegisterUserRoutes(router *gin.Engine){
 	userRoutes.GET("/logout", controllers.Logout)
 	userRoutes.GET("/", middlewares.AuthChecker, controllers.GetUser)
 	userRoutes.GET("/send", controllers.TestMail)
+	userRoutes.GET("/:username", controllers.GetUserViaUsername)
 }

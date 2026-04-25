@@ -5,13 +5,13 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-func SendMail(c *gin.Context, email string){
+func SendMail(c *gin.Context, email string, verifyUrl string){
 	m:=gomail.NewMessage()
 	m.SetHeader("From", "safetygo73@gmail.com")
 	m.SetHeader("To", email)
-	m.SetHeader("Subject", "Confirme your booking")
-	m.SetBody("text/plain", "Your booking is confirmed!")
-	m.AddAlternative("text/html", "<b>Your booking is confirmed!</b>")
+	m.SetHeader("Subject", "Click to confirm your booking")
+	m.SetBody("text/plain", verifyUrl)
+	// m.AddAlternative("text/html", "<b>Your booking is confirmed!</b>")
 
 	d := gomail.NewDialer(
 		"smtp.gmail.com",

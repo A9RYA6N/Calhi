@@ -31,14 +31,14 @@ type Timeslot struct{
 type Booking struct{
 	gorm.Model
 
-	TimeslotID uint `gorm:"not null;index"`
+	TimeslotID uint `gorm:"not null;uniqueIndex:idx_slot_booking"`
 
 	ClientName string `gorm:"not null"`
 	ClientEmail string `gorm:"not null"`
 
-	Start time.Time `gorm:"not null"`
+	Start time.Time `gorm:"not null;uniqueIndex:idx_slot_booking"`
 	End time.Time `gorm:"not null"`
 
-	// Status string `gorm:"default:'pending'"`
-	// Token  string
+	Status string `gorm:"default:'pending'"`
+	Token  string
 }

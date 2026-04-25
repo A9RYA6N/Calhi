@@ -125,6 +125,25 @@ func RegisterUser(c *gin.Context){
 	})
 }
 
+func GetUserViaUsername(c *gin.Context){
+	username, _:=c.Params.Get("username")
+	var user db.User
+	result:=db.DB.Where("user_name = ?", username).First(&user)
+	if result.Error!=nil{
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": "User doesnt exist",
+		})
+		return
+	}
+	data:=map[string]string{"name":user.Name, "email":user.Email}
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "User found",
+		"data": data,
+	})
+}
+
 func Logout(c *gin.Context){
 	c.SetCookie("Authorization", "delete", -1, "", "", false, true)
 	c.JSON(200, gin.H{
@@ -152,5 +171,5 @@ func TestAuth(c *gin.Context){
 }
 
 func TestMail(c *gin.Context){
-	services.SendMail(c, "aryanburnwal8@gmail.com")
+	services.SendMail(c, "aryanburnwal8@gmail.com", "abc")
 }
