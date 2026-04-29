@@ -4,6 +4,8 @@ import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 import toast from "react-hot-toast"
 import { createTimeslot } from '@/funcs/TimeslotFuncs';
+import { useAppDispatch } from '@/store/hooks';
+import { fetchTimeslots } from '@/features/timeslot/timeslotThunks';
 
 interface TimeslotModalProps {
     isOpen: boolean;
@@ -11,6 +13,7 @@ interface TimeslotModalProps {
 }
 
 const TimeslotModal: React.FC<TimeslotModalProps> = ({ isOpen, onClose }) => {
+    const dispatch = useAppDispatch();
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [startTime, setStartTime] = useState("09:00");
     const [endTime, setEndTime] = useState("21:00");
@@ -40,6 +43,7 @@ const TimeslotModal: React.FC<TimeslotModalProps> = ({ isOpen, onClose }) => {
 
         if (response.success) {
             toast.success("Timeslot created!");
+            dispatch(fetchTimeslots());
             onClose();
         } else {
             toast.error(response.message);

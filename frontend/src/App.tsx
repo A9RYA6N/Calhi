@@ -7,6 +7,8 @@ import Dashboard from './pages/Dashboard'
 import PublicProfile from './pages/PublicProfile'
 import Booking from './pages/Booking'
 import Verify from './pages/Verify'
+import ShowBookings from './pages/ShowBookings'
+import ShowTimeslots from './pages/ShowTimeslots'
 import { Toaster } from 'react-hot-toast'
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
       <Route path='/dashboard' element={<Dashboard/>}/>
+      <Route path='/dashboard/bookings' element={<ShowBookings/>}/>
+      <Route path='/dashboard/timeslots' element={<ShowTimeslots/>}/>
       <Route path='/verify' element={<Verify/>}/>
       <Route path='/:username' element={<PublicProfile/>}/>
       <Route path='/:username/:slug' element={<Booking/>}/>

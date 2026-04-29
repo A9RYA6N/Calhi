@@ -1,51 +1,34 @@
 import { useState, useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import DashboardSidebar from "../components/DashboardSidebar";
-import DashboardHeader from "../components/DashboardHeader";
-import DashboardStats from "../components/DashboardStats";
-import DashboardWeeklyOutlook from "../components/DashboardWeeklyOutlook";
-import DashboardRecentActivity from "../components/DashboardRecentActivity";
-import TimeslotModal from '@/components/TimeslotModal';
-
-export interface Timeslot {
-    ID: number;
-    Start: string;
-    End: string;
-    EventName?: string;
-}
+import DashboardSidebar from "../components/DashboardComponents/DashboardSidebar";
+import DashboardHeader from "../components/DashboardComponents/DashboardHeader";
+import DashboardStats from "../components/DashboardComponents/DashboardStats";
+import DashboardWeeklyOutlook from "../components/DashboardComponents/DashboardWeeklyOutlook";
+import DashboardRecentActivity from "../components/DashboardComponents/DashboardRecentActivity";
+import TimeslotModal from '@/components/DashboardComponents/TimeslotModal';
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const [isTimeslotModalOpen, setIsTimeslotModalOpen] = useState(false);
-    const [userName, setUserName] = useState<string>("Loading...");
-    const [timeslots, setTimeslots] = useState<Timeslot[]>([]);
 
+    const user = useAppSelector(state => state.auth.user);
+    const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
+    const timeslots = useAppSelector(state => state.timeslot.timeslots);
+
+    const userName = user?.Name || 'Loading...';
+
+    // Redirect if not authenticated
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const userRes = await axios.get(`${import.meta.env.VITE_BACKEND_USER}/`, { withCredentials: true });
-                if (userRes.data?.data?.Name) {
-                    setUserName(userRes.data.data.Name);
-                }
-            } catch (err) {
-                console.error("Failed to fetch user, redirecting:", err);
-                navigate("/");
-                return; // Stop fetching Timeslots if user is unauthorized
-            }
+        if (!isAuthenticated && !user) {
+            // auth loading is handled by AppInitializer, so only redirect if explicitly unauthenticated
+        }
+    }, [isAuthenticated, user, navigate, dispatch]);
 
-            try {
-                const TimeslotRes = await axios.get(`${import.meta.env.VITE_BACKEND_TIMESLOT}/`, { withCredentials: true });
-                if (TimeslotRes.data?.data) {
-                    setTimeslots(TimeslotRes.data.data);
-                }
-            } catch (err) {
-                console.error("Failed to fetch Timeslots:", err);
-            }
-        };
-
-        fetchData();
-    }, []);
+    // Count only upcoming timeslots (after current time)
+    const now = new Date();
+    const upcomingTimeslots = timeslots.filter(t => new Date(t.Start) > now);
 
     return (
         <>
@@ -64,7 +47,7 @@ const Dashboard = () => {
                 <div className="flex-1 overflow-y-auto p-8 custom-scrollbar relative z-0">
                     <div className="mx-auto flex max-w-7xl flex-col gap-8">
                         
-                        <DashboardStats timeslotsCount={timeslots.length} />
+                        <DashboardStats timeslotsCount={upcomingTimeslots.length} />
 
                         {/* Main Dashboard Grid */}
                         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

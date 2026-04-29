@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, isSameDay } from 'date-fns';
-import type { Timeslot } from "../pages/Dashboard";
+import type { Timeslot } from '@/types/timeslot';
 
 interface DashboardWeeklyOutlookProps {
     Timeslots: Timeslot[];

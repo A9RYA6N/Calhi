@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 interface DashboardSidebarProps {
@@ -33,27 +34,28 @@ const DashboardSidebar = ({ onNewTimeslot, userName }: DashboardSidebarProps) =>
                 <nav className="flex flex-col gap-2">
                     <p className="px-2 text-xs font-semibold uppercase tracking-wider text-[#a79db9]">Menu</p>
                     
-                    {/* Active Item with Gradient */}
-                    <a className="group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-white transition-all overflow-hidden" href="#">
-                        <div className="absolute inset-0 bg-linear-to-r from-primary/80 to-blue-600/80 opacity-100"></div>
-                        <span className="material-symbols-outlined relative z-10" style={{ fontVariationSettings: "'FILL' 1" }}>dashboard</span>
+                    {/* Dashboard */}
+                    <Link to="/dashboard" className="group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-white transition-all overflow-hidden">
+                        <div className="absolute inset-0 hover:bg-white/10 opacity-10"></div>
+                        <span className="material-symbols-outlined relative z-10">dashboard</span>
                         <span className="relative z-10 font-medium">Dashboard</span>
-                    </a>
+                    </Link>
 
-                    <a className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] hover:bg-[#2e2839] hover:text-white transition-colors" href="#">
+                    <Link to="/dashboard/timeslots" className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] hover:bg-[#2e2839] hover:text-white transition-colors">
                         <span className="material-symbols-outlined">calendar_today</span>
-                        <span className="font-medium">Schedule</span>
-                    </a>
+                        <span className="font-medium">My schedule</span>
+                    </Link>
+
+                    <Link to="/dashboard/bookings" className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] hover:bg-[#2e2839] hover:text-white transition-colors">
+                        <span className="material-symbols-outlined">book</span>
+                        <span className="font-medium">Bookings</span>
+                    </Link>
 
                     <a className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] hover:bg-[#2e2839] hover:text-white transition-colors" href="#">
                         <span className="material-symbols-outlined">bar_chart</span>
                         <span className="font-medium">Analytics</span>
                     </a>
 
-                    <a className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] hover:bg-[#2e2839] hover:text-white transition-colors" href="#">
-                        <span className="material-symbols-outlined">group</span>
-                        <span className="font-medium">Clients</span>
-                    </a>
 
                     <div className="my-2 border-t border-[#2e2839]"></div>
 
