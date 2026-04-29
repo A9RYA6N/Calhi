@@ -138,3 +138,29 @@ func VerifyBooking(c *gin.Context){
 		return
 	}
 }
+
+func GetBookings(c *gin.Context){
+	userVal, exists:=c.Get("user")
+
+	if !exists || userVal==nil {
+		c.JSON(401, gin.H{
+			"success": false,
+			"message": "Unauthorized",
+		})
+		return
+	}
+	user:=userVal.(db.User)
+	var bookings []db.Booking
+	result:=db.DB.Where("client_email = ?", user.Email).Find(&bookings)
+	if result.Error!=nil{
+		c.JSON(500, gin.H{
+			"success": false,
+			"message": "DB error",
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"success": true,
+		"data": bookings,
+	})
+}

@@ -1,11 +1,16 @@
 package services
 
 import (
+	"os"
+
 	"github.com/gin-gonic/gin"
 	"gopkg.in/gomail.v2"
 )
 
 func SendMail(c *gin.Context, email string, verifyUrl string){
+	senderMail:=os.Getenv("SMTP_MAIL")
+	senderPass:=os.Getenv("SMTP_PASSWORD")
+
 	m:=gomail.NewMessage()
 	m.SetHeader("From", "safetygo73@gmail.com")
 	m.SetHeader("To", email)
@@ -16,8 +21,8 @@ func SendMail(c *gin.Context, email string, verifyUrl string){
 	d := gomail.NewDialer(
 		"smtp.gmail.com",
 		465,
-		"safetygo73@gmail.com",
-		"glin ezpg qivf abzg",
+		senderMail,
+		senderPass,
 	)
 
 	if err := d.DialAndSend(m); err != nil {

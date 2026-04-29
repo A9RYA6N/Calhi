@@ -76,7 +76,7 @@ func GetTimeslots(c *gin.Context){
 
 	var timeslots []db.Timeslot
 
-	result:=db.DB.Where("user_id = ?", user.(db.User).ID).Find(&timeslots)
+	result:=db.DB.Preload("Bookings").Where("user_id = ?", user.(db.User).ID).Find(&timeslots)
 	if result.Error != nil {
 		c.JSON(401, gin.H{
 			"success":false,

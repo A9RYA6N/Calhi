@@ -10,83 +10,66 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func AuthChecker(c *gin.Context){
+func getUserFromToken(tokenString string) (*db.User, error) {
 	secret:=os.Getenv("JWT_SECRET")
-	tokenString, err:=c.Cookie("Authorization")
 
-	if err!=nil{
-		c.AbortWithStatusJSON(401,gin.H{
-			"message":"Unauthorized request",
-		})
-		return
-	}
-
-	token, err:=jwt.Parse(tokenString, func(token *jwt.Token) (any , error){
-		if _,ok:=token.Method.(*jwt.SigningMethodHMAC); !ok{
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header)
+	token, err:=jwt.Parse(tokenString, func(token *jwt.Token) (any, error){
+		if _, ok:=token.Method.(*jwt.SigningMethodHMAC); !ok{
+			return nil, fmt.Errorf("invalid signing method")
 		}
 		return []byte(secret), nil
 	})
 
-	if claims, ok:=token.Claims.(jwt.MapClaims); ok && token.Valid{
-
-		if float64(time.Now().Unix()) > claims["exp"].(float64){
-			c.AbortWithStatusJSON(401, gin.H{
-				"message":"Invalid access", 
-			})
-		}
-
-		var user db.User
-		db.DB.First(&user, claims["sub"])
-
-		if user.ID==0{
-			c.AbortWithStatusJSON(401, gin.H{
-				"message":"Invalid access", 
-			})
-		}
-
-		c.Set("user", user)
-		// fmt.Println(user)
-		// fmt.Println(claims["foo"], claims["nbf"])		
-
-		c.Next()
-	}else{
-		fmt.Println(err)
-		c.AbortWithStatusJSON(401, gin.H{
-			"message":"Invalid access", 
-		})
+	if err!=nil || !token.Valid{
+		return nil, fmt.Errorf("invalid token")
 	}
+
+	claims, ok:=token.Claims.(jwt.MapClaims)
+	if !ok{
+		return nil, fmt.Errorf("invalid claims")
+	}
+
+	// expiry check
+	if float64(time.Now().Unix())>claims["exp"].(float64){
+		return nil, fmt.Errorf("token expired")
+	}
+
+	var user db.User
+	if err:=db.DB.First(&user, claims["sub"]).Error; err!=nil{
+		return nil, fmt.Errorf("user not found")
+	}
+
+	return &user, nil
 }
 
-func BookingsAuth(c *gin.Context) {
-	secret := os.Getenv("JWT_SECRET")
+func AuthChecker(c *gin.Context){
+	tokenString, err:=c.Cookie("Authorization")
+	if err!=nil {
+		c.AbortWithStatusJSON(401, gin.H{"message": "Unauthorized"})
+		return
+	}
+	user, err:=getUserFromToken(tokenString)
+	if err!=nil {
+		c.AbortWithStatusJSON(401, gin.H{"message": err.Error()})
+		return
+	}
+	c.Set("user", *user)
+	c.Next()
+}
 
-	tokenString, err := c.Cookie("Authorization")
-	if err != nil {
-		// no token → guest
+func BookingsAuth(c *gin.Context){
+	tokenString, err:=c.Cookie("Authorization")
+	if err!=nil {
 		c.Set("user", nil)
 		c.Next()
 		return
 	}
-
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
-		return []byte(secret), nil
-	})
-
-	if err != nil || !token.Valid {
+	user, err:=getUserFromToken(tokenString)
+	if err!=nil {
 		c.Set("user", nil)
 		c.Next()
 		return
 	}
-
-	if claims, ok := token.Claims.(jwt.MapClaims); ok {
-		var user db.User
-		db.DB.First(&user, claims["sub"])
-
-		if user.ID != 0 {
-			c.Set("user", user)
-		}
-	}
-
+	c.Set("user", *user)
 	c.Next()
 }
