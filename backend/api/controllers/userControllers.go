@@ -171,5 +171,5 @@ func TestAuth(c *gin.Context){
 }
 
 func TestMail(c *gin.Context){
-	services.SendMail(c, "aryanburnwal8@gmail.com", "abc")
+	services.SendMail("aryanburnwal8@gmail.com", "abc")
 }

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/A9RYA6N/Calhi/backend/api/db"
+	"github.com/A9RYA6N/Calhi/backend/api/services"
 	"github.com/A9RYA6N/Calhi/backend/structs"
 	"github.com/gin-gonic/gin"
 )
@@ -32,24 +33,45 @@ func generateUniqueSlug(base string, userId uint) string {
 
 func CreateTimeslot(c *gin.Context){
 	var req structs.CreateTimeslotRequest
-	if c.ShouldBindJSON(&req)!=nil{
+	err1:=c.ShouldBindJSON(&req)
+	if err1!=nil{
 		c.JSON(400, gin.H{
 			"success":false,
 			"message": "Invalid request body",
+			"error": err1.Error(),
 		})
 		return
 	}
 
-	user, _:=c.Get("user")
+	utcStart, utcEnd, err:=services.ConvertToUTC(req.StartsAt, req.EndsAt, req.Timezone)
+
+	if err!=nil{
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	userVal, exists:=c.Get("user")
+	if !exists||userVal==nil{
+		c.JSON(401, gin.H{
+			"success": false,
+			"message": "Unauthorized",
+		})
+		return
+	}
+	//(db.User) sets the user var as a User model from db
+	user:=userVal.(db.User)
 
 	baseSlug:=makeSlug(req.EventName)
-	uniqueSlug:=generateUniqueSlug(baseSlug, user.(db.User).ID)
+	uniqueSlug:=generateUniqueSlug(baseSlug, user.ID)
 
 	timeslot:=db.Timeslot{
-		//(db.User) sets the user var as a User model from db
-		UserID: user.(db.User).ID,
-		Start: req.Start,
-		End: req.End,
+		UserID: user.ID,
+		StartsAt: utcStart,
+		EndsAt: utcEnd,
+		Timezone: req.Timezone,
 		Duration: req.Duration,
 		Slug: uniqueSlug,
 		EventName: req.EventName,
@@ -78,7 +100,7 @@ func GetTimeslots(c *gin.Context){
 
 	result:=db.DB.Preload("Bookings").Where("user_id = ?", user.(db.User).ID).Find(&timeslots)
 	if result.Error != nil {
-		c.JSON(401, gin.H{
+		c.JSON(500, gin.H{
 			"success":false,
 			"message": "Invalid request",
 			"error": result.Error,

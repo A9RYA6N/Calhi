@@ -21,9 +21,10 @@ type Timeslot struct{
 	UserID uint `gorm:"uniqueIndex:idx_user_slug;not null"`
 	EventName string `gorm:"not null"`
 	Slug string `gorm:"uniqueIndex:idx_user_slug;not null"`
-	Start time.Time `gorm:"not null"`
-	End time.Time `gorm:"not null"`
+	StartsAt time.Time `gorm:"not null"`
+	EndsAt time.Time `gorm:"not null"`
 	Duration int `gorm:"not null"`
+	Timezone string `gorm:"not null"`
 
 	Bookings []Booking `gorm:"foreignKey:TimeslotID"`
 }
@@ -32,12 +33,13 @@ type Booking struct{
 	gorm.Model
 
 	TimeslotID uint `gorm:"not null;uniqueIndex:idx_slot_booking"`
+	IdempotencyKey string `gorm:"uniqueIndex"`
 
 	ClientName string `gorm:"not null"`
 	ClientEmail string `gorm:"not null"`
 
-	Start time.Time `gorm:"not null;uniqueIndex:idx_slot_booking"`
-	End time.Time `gorm:"not null"`
+	StartsAt time.Time `gorm:"not null;uniqueIndex:idx_slot_booking"`
+	EndsAt time.Time `gorm:"not null"`
 
 	Status string `gorm:"default:'pending'"`
 	Token  string

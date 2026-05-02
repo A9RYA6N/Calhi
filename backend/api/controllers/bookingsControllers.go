@@ -1,15 +1,17 @@
 package controllers
 
-import(
+import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/A9RYA6N/Calhi/backend/api/db"
-	"github.com/A9RYA6N/Calhi/backend/structs"
 	"github.com/A9RYA6N/Calhi/backend/api/services"
+	"github.com/A9RYA6N/Calhi/backend/structs"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"gorm.io/gorm/clause"
 )
 
 func CreateBooking(c *gin.Context){
@@ -21,87 +23,131 @@ func CreateBooking(c *gin.Context){
 		return
 	}
 
-	var timeslot db.Timeslot
-	result:=db.DB.First(&timeslot, req.TimeslotId)
-	if result.Error != nil {
-		c.JSON(401, gin.H{
-			"message": "Invalid request, invalid timeslotid",
+	if req.IdempotencyKey==""{
+		c.JSON(400, gin.H{
+			"message": "Idempotency key required",
 		})
 		return
 	}
 
-	if req.Start.Before(timeslot.Start) || req.End.After(timeslot.End){
-		c.JSON(401, gin.H{
-			"message": "Invalid request, time mismatch",
-		})
-		return
-	}
+	tx:=db.DB.Begin()
+	defer func() {
+		if r:=recover(); r!=nil{
+			tx.Rollback()
+		}
+	}()
 
 	var existing db.Booking
-	db.DB.Where("timeslot_id = ? AND start = ? AND status = ?", req.TimeslotId, req.Start, "confirmed").First(&existing)
+	
+	err:=tx.Where("idempotency_key = ?", req.IdempotencyKey).First(&existing).Error
+	if err==nil{
+		tx.Rollback()
+		c.JSON(200, gin.H{
+			"success": true,
+			"message": "Booking already processed",
+			"data": existing,
+		})
+		return
+	}
 
-	if existing.ID != 0 {
+	var timeslot db.Timeslot
+	if err:=tx.
+		Clauses(clause.Locking{Strength: "UPDATE"}).
+		First(&timeslot, req.TimeslotId).Error; err != nil {
+		tx.Rollback()
+		c.JSON(400, gin.H{"message": "Invalid timeslot"})
+		return
+	}
+
+	if req.StartsAt.Before(timeslot.StartsAt)||req.EndsAt.After(timeslot.EndsAt){
+		tx.Rollback()
 		c.JSON(400, gin.H{
+			"success":false,
+			"message": "Time out of bounds",
+		})
+		return
+	}
+
+	var conflict db.Booking
+
+	err=tx.Where(`timeslot_id = ? AND status = 'confirmed' AND NOT (ends_at <= ? OR starts_at >= ?)`, req.TimeslotId, req.StartsAt, req.EndsAt).First(&conflict).Error
+
+	if err==nil{
+		tx.Rollback()
+		c.JSON(409, gin.H{
+			"success": true,
 			"message": "Slot already booked",
 		})
 		return
 	}
 
 	token:=uuid.NewString()
+	status:="pending"
+	tokenVal:=token
+	userVal, exists:=c.Get("user")
+	if exists && userVal!=nil{
+		status = "confirmed"
+		tokenVal = ""
+	}
 
-	userVal, exists := c.Get("user")
-	if exists && userVal != nil {
-		booking:=db.Booking{
-			TimeslotID: req.TimeslotId,
-			ClientName: req.Name,
-			ClientEmail: req.Email,
-			Start: req.Start,
-			End: req.End,
-			Status: "confirmed",
-			Token: "",
-		}
-		result:=db.DB.Create(&booking)
+	booking:=db.Booking{
+		TimeslotID: req.TimeslotId,
+		ClientName: req.Name,
+		ClientEmail: req.Email,
+		StartsAt: req.StartsAt,
+		EndsAt: req.EndsAt,
+		Status: status,
+		Token: tokenVal,
+		IdempotencyKey: req.IdempotencyKey,
+	}
 
-		if result.Error != nil {
-			c.JSON(500, gin.H{
-				"message": "Failed to create booking",
-			})
-			return
-		}
-		c.JSON(201, gin.H{
-			"success":true,
-			"message":"Booking created",
-		})
-	} else {
-		// guest → send verification email
-		booking:=db.Booking{
-			TimeslotID: req.TimeslotId,
-			ClientName: req.Name,
-			ClientEmail: req.Email,
-			Start: req.Start,
-			End: req.End,
-			Status: "pending",
-			Token: token,
-		}
-		result:=db.DB.Create(&booking)
-
-		if result.Error != nil {
-			c.JSON(500, gin.H{
+	if err:=tx.Create(&booking).Error; err!=nil {
+		tx.Rollback()
+		if strings.Contains(err.Error(), "duplicate key") {
+			c.JSON(409, gin.H{
 				"success": false,
-				"message": "Failed to create booking",
+				"message": "Slot already booked",
 			})
 			return
 		}
 
-		verifyURL:=fmt.Sprintf("%s/verify?token=%s", os.Getenv("FRONTEND_URL"), token)
-
-		services.SendMail(c, req.Email, verifyURL)
-		c.JSON(200, gin.H{
-			"success":true,
-			"message":"Mail sent",
+		c.JSON(500, gin.H{
+			"success": false,
+			"message": "Database error",
 		})
 		return
 	}
+
+	if err := tx.Commit().Error; err!=nil {
+		c.JSON(500, gin.H{
+			"success": false,
+			"message": "Failed to commit transaction",
+		})
+		return
+	}
+
+	if status=="pending"{
+		verifyURL:=fmt.Sprintf("%s/verify?token=%s", os.Getenv("FRONTEND_URL"), token)
+
+		go func(email, verifyURL string) {
+			err:=services.SendMailWithRetry(email, verifyURL)
+			if err!=nil {
+				fmt.Println("Mail failed:", err)
+			}
+		}(req.Email, verifyURL)
+
+		c.JSON(200, gin.H{
+			"success": true,
+			"message": "Verification mail queued",
+		})
+		return
+	}
+
+	c.JSON(201, gin.H{
+		"success": true,
+		"message": "Booking created",
+		"data": booking,
+	})
 }
 
 func VerifyBooking(c *gin.Context){
@@ -115,8 +161,8 @@ func VerifyBooking(c *gin.Context){
 			return
 		}
 
-		if time.Since(booking.CreatedAt) > 5*time.Minute {
-			db.DB.Unscoped().Delete(&booking)
+		if time.Since(booking.CreatedAt)>5*time.Minute {
+			db.DB.Delete(&booking)
 			c.JSON(400, gin.H{
 				"message": "Link expired. Please book again.",
 			})

@@ -1,18 +1,19 @@
 package services
 
 import (
+	"fmt"
 	"os"
+	"time"
 
-	"github.com/gin-gonic/gin"
 	"gopkg.in/gomail.v2"
 )
 
-func SendMail(c *gin.Context, email string, verifyUrl string){
+func SendMail(email string, verifyUrl string) error{
 	senderMail:=os.Getenv("SMTP_MAIL")
 	senderPass:=os.Getenv("SMTP_PASSWORD")
 
 	m:=gomail.NewMessage()
-	m.SetHeader("From", "safetygo73@gmail.com")
+	m.SetHeader("From", senderMail)
 	m.SetHeader("To", email)
 	m.SetHeader("Subject", "Click to confirm your booking")
 	m.SetBody("text/plain", verifyUrl)
@@ -25,14 +26,19 @@ func SendMail(c *gin.Context, email string, verifyUrl string){
 		senderPass,
 	)
 
-	if err := d.DialAndSend(m); err != nil {
-		c.JSON(500, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
+	return d.DialAndSend(m)
+}
 
-	c.JSON(200, gin.H{
-		"message": "Email sent successfully!",
-	})
+func SendMailWithRetry(email string, verifyURL string) error {
+
+	maxRetries := 3
+	for i := range maxRetries {
+		err := SendMail(email, verifyURL)
+		if err == nil {
+			return nil
+		}
+		time.Sleep(time.Duration(1<<i) * time.Second) // 1s, 2s, 4s
+	}
+	return fmt.Errorf("failed to send mail after retries")
+
 }
