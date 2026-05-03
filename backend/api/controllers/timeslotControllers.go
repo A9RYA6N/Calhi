@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/A9RYA6N/Calhi/backend/api/db"
@@ -16,80 +15,69 @@ func makeSlug(s string) string {
 	return s
 }
 
-func generateUniqueSlug(base string, userId uint) string {
-	slug:=base
-	counter:=1
-	for{
-		var count int64
-		db.DB.Model(&db.Timeslot{}).Where("slug=? AND user_id=?", slug, userId).Count(&count)
-		if count==0{
-			break
-		}
-		slug=fmt.Sprintf("%s-%d", base, counter)
-		counter++
-	}
-	return slug
-}
-
 func CreateTimeslot(c *gin.Context){
 	var req structs.CreateTimeslotRequest
-	err1:=c.ShouldBindJSON(&req)
-	if err1!=nil{
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(400, gin.H{
-			"success":false,
+			"success": false,
 			"message": "Invalid request body",
-			"error": err1.Error(),
+			"error":   err.Error(),
 		})
 		return
 	}
 
-	utcStart, utcEnd, err:=services.ConvertToUTC(req.StartsAt, req.EndsAt, req.Timezone)
+	utcStart, utcEnd, err := services.ConvertToUTC(req.StartsAt, req.EndsAt, req.Timezone)
+	if err != nil {
+		c.JSON(400, gin.H{"success": false, "message": err.Error()})
+		return
+	}
 
-	if err!=nil{
-		c.JSON(400, gin.H{
+	userVal, exists := c.Get("user")
+	if !exists || userVal == nil {
+		c.JSON(401, gin.H{"success": false, "message": "Unauthorized"})
+		return
+	}
+
+	user := userVal.(db.User)
+	baseSlug := makeSlug(req.EventName)
+
+	if !req.IsRecurring {
+		uniqueSlug := services.GenerateUniqueSlug(baseSlug, user.ID)
+		timeslot := db.Timeslot{
+			UserID:    user.ID,
+			StartsAt:  utcStart,
+			EndsAt:    utcEnd,
+			Timezone:  req.Timezone,
+			Duration:  req.Duration,
+			Slug:      uniqueSlug,
+			EventName: req.EventName,
+		}
+		result := db.DB.Create(&timeslot)
+		if result.Error != nil {
+			c.JSON(500, gin.H{
+				"success": false,
+				"message": "Failed to create timeslot",
+				"error":   result.Error,
+			})
+			return
+		}
+		c.JSON(201, gin.H{"success": true, "message": "Timeslot created"})
+		return
+	}
+
+	count, status, err := services.CreateRecurringTimeslots(req, user, utcStart, utcEnd, baseSlug)
+	if err != nil {
+		c.JSON(status, gin.H{
 			"success": false,
 			"message": err.Error(),
 		})
 		return
 	}
 
-	userVal, exists:=c.Get("user")
-	if !exists||userVal==nil{
-		c.JSON(401, gin.H{
-			"success": false,
-			"message": "Unauthorized",
-		})
-		return
-	}
-	//(db.User) sets the user var as a User model from db
-	user:=userVal.(db.User)
-
-	baseSlug:=makeSlug(req.EventName)
-	uniqueSlug:=generateUniqueSlug(baseSlug, user.ID)
-
-	timeslot:=db.Timeslot{
-		UserID: user.ID,
-		StartsAt: utcStart,
-		EndsAt: utcEnd,
-		Timezone: req.Timezone,
-		Duration: req.Duration,
-		Slug: uniqueSlug,
-		EventName: req.EventName,
-	}
-
-	result:=db.DB.Create(&timeslot)
-	// fmt.Println(result.Error)
-	if result.Error != nil {
-		c.JSON(500, gin.H{
-			"success":false,
-			"message": "Failed to create timeslot",
-			"error":result.Error,
-		})
-		return
-	}
-	c.JSON(201, gin.H{
-		"success":true,
-		"message":"Timeslot created",
+	c.JSON(status, gin.H{
+		"success": true,
+		"message": "Recurring timeslots created",
+		"count":   count,
 	})
 }
 
@@ -137,5 +125,38 @@ func GetUserTimeslots(c *gin.Context){
 		"success":true,
 		"message": "Got timeslots",
 		"data": timeslots,
+	})
+}
+
+func GetTimeslotBySlug(c *gin.Context){
+	uname := c.Param("username")
+	slug  := c.Param("slug")
+
+	var user db.User
+	if err := db.DB.Where("user_name = ?", uname).First(&user).Error; err != nil {
+		c.JSON(404, gin.H{"success": false, "message": "User not found"})
+		return
+	}
+
+	var clicked db.Timeslot
+	if err := db.DB.Where("user_id = ? AND slug = ?", user.ID, slug).First(&clicked).Error; err != nil {
+		c.JSON(404, gin.H{"success": false, "message": "Timeslot not found"})
+		return
+	}
+
+	baseSlug := services.GetBaseSlug(clicked.Slug)
+	
+	var slots []db.Timeslot
+	db.DB.
+		Preload("Bookings").
+		Where("user_id = ?", user.ID).
+		Where("slug = ? OR slug LIKE ?", baseSlug, baseSlug+"-%").
+		Order("starts_at ASC").
+		Find(&slots)
+
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "Got timeslot series",
+		"data":    slots,
 	})
 }

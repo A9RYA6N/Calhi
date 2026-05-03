@@ -12,4 +12,5 @@ func RegisterTimeslotRoutes(router *gin.Engine){
 	timeslotRoutes.GET("/", controllers.GetTimeslots)
 
 	router.GET("/api/timeslot/:username", controllers.GetUserTimeslots)
+	router.GET("/api/timeslot/:username/:slug", controllers.GetTimeslotBySlug)
 }
