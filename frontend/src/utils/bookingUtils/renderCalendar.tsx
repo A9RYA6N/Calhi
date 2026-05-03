@@ -1,8 +1,8 @@
 import { format } from 'date-fns';
 
 export const renderCalendar = (timeslot: any) => {
-    if (!timeslot || !timeslot.Start) return null;
-    const date = new Date(timeslot.Start);
+    if (!timeslot || !timeslot.StartsAt) return null;
+    const date = new Date(timeslot.StartsAt);
     const month = format(date, 'MMMM yyyy');
     const day = date.getDate();
     

@@ -1,7 +1,11 @@
+import { Navigate } from 'react-router-dom';
+import { useAppSelector } from '../store/hooks';
 import HPHeader from "../components/GenHeader";
 import GenFooter from "../components/GenFooter";
 
 const HomePage = () => {
+    const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
+    if (isAuthenticated) return <Navigate to="/dashboard" replace />;
     return (
         <>
             <HPHeader />

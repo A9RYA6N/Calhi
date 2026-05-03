@@ -1,124 +1,196 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, isSameDay } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 import type { Timeslot } from '@/types/timeslot';
 
 interface DashboardWeeklyOutlookProps {
     Timeslots: Timeslot[];
 }
 
+// Compact row height for dashboard widget — keeps the card at a fixed, predictable size
+const HOUR_HEIGHT = 48;
+const END_HOUR = 24;
+const HOURS = Array.from({ length: END_HOUR }, (_, i) => i);
+const TOTAL_HEIGHT = END_HOUR * HOUR_HEIGHT; // 1152px — full scrollable height
+
+function formatHourLabel(h: number) {
+    if (h === 0) return '12 AM';
+    if (h < 12) return `${h} AM`;
+    if (h === 12) return '12 PM';
+    return `${h - 12} PM`;
+}
+
+function getBlockStyle(startISO: string, endISO: string): React.CSSProperties {
+    const start = new Date(startISO);
+    const end = new Date(endISO);
+    const topPx = (start.getHours() + start.getMinutes() / 60) * HOUR_HEIGHT;
+    const durationHours = (end.getTime() - start.getTime()) / 3_600_000;
+    return {
+        top: `${topPx}px`,
+        height: `${Math.max(durationHours * HOUR_HEIGHT, 20)}px`,
+    };
+}
+
 const DashboardWeeklyOutlook = ({ Timeslots }: DashboardWeeklyOutlookProps) => {
+    const navigate = useNavigate();
     const [currentDate, setCurrentDate] = useState(new Date());
+    // scrollRef points at the scrollable grid body — NOT the card or the page
+    const scrollRef = useRef<HTMLDivElement>(null);
 
-    const handlePreviousWeek = () => setCurrentDate(subWeeks(currentDate, 1));
-    const handleNextWeek = () => setCurrentDate(addWeeks(currentDate, 1));
-
-    // Get an array of the 7 days for the current week starting from Monday
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
     const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
+    const dateRangeLabel = `${format(weekStart, 'MMM d')} – ${format(weekEnd, 'MMM d')}`;
 
-    const weekDays = useMemo(() => {
-        return Array.from({ length: 7 }).map((_, i) => {
-            const date = new Date(weekStart);
-            date.setDate(date.getDate() + i);
-            return date;
+    const weekDays = useMemo(
+        () => Array.from({ length: 7 }).map((_, i) => {
+            const d = new Date(weekStart);
+            d.setDate(d.getDate() + i);
+            return d;
+        }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [weekStart.toDateString()]
+    );
+
+    const isCurrentWeek = weekDays.some(d => isSameDay(d, new Date()));
+
+    // Auto-scroll the inner grid div to centre current time — NOT the page
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        const raf = requestAnimationFrame(() => {
+            const now = new Date();
+            const nowPx = (now.getHours() + now.getMinutes() / 60) * HOUR_HEIGHT;
+            // Put current time ~40% from the top of the visible area
+            el.scrollTo({ top: Math.max(0, nowPx - el.clientHeight * 0.4), behavior: 'smooth' });
         });
-    }, [weekStart]);
+        return () => cancelAnimationFrame(raf);
+    }, [currentDate]);
 
-    const dateRangeLabel = `${format(weekStart, 'MMM d')} - ${format(weekEnd, 'MMM d')}`;
-
-    const calculateTopAndHeight = (startString: string, endString: string) => {
-        const start = new Date(startString);
-        const end = new Date(endString);
-        
-        // Timeline is 8:00 AM to 8:00 PM (12 hours)
-        const startHourOffset = start.getHours() + (start.getMinutes() / 60) - 8;
-        const durationHours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
-        
-        const topPercentage = Math.max(0, Math.min(100, (startHourOffset / 12) * 100));
-        const heightPercentage = Math.max(0, Math.min(100, (durationHours / 12) * 100));
-        
-        return { top: `${topPercentage}%`, height: `${heightPercentage}%` };
-    };
+    // Current-time line position
+    const nowPx = useMemo(() => {
+        const now = new Date();
+        return (now.getHours() + now.getMinutes() / 60) * HOUR_HEIGHT;
+    }, []);
 
     return (
-        <div className="glass-card rounded-2xl p-6 lg:col-span-2 flex flex-col h-full min-h-100">
-            <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-bold text-white">Weekly Outlook</h3>
-                <div className="flex items-center gap-2">
-                    <button onClick={handlePreviousWeek} className="p-1 text-[#a79db9] hover:text-white hover:bg-[#2e2839] rounded-lg transition-colors">
+        /*
+         * The card is a FIXED-HEIGHT flex column.
+         * Only the inner grid body (scrollRef) scrolls — the card header is always visible.
+         * h-[420px] matches the original dashboard widget height.
+         */
+        <div className="glass-card rounded-2xl p-5 lg:col-span-2 flex flex-col h-[420px]">
+
+            {/* ── Card header (never scrolls) ── */}
+            <div className="flex shrink-0 items-center justify-between mb-3">
+                <h3 className="text-base font-bold text-white">Weekly Outlook</h3>
+                <div className="flex items-center gap-1.5">
+                    <button
+                        onClick={() => setCurrentDate(d => subWeeks(d, 1))}
+                        className="p-1 rounded-lg text-[#a79db9] hover:text-white hover:bg-[#2e2839] transition-colors"
+                    >
                         <span className="material-symbols-outlined text-[20px]">chevron_left</span>
                     </button>
-                    <span className="text-sm font-medium text-white">{dateRangeLabel}</span>
-                    <button onClick={handleNextWeek} className="p-1 text-[#a79db9] hover:text-white hover:bg-[#2e2839] rounded-lg transition-colors">
+                    <span className="text-sm font-medium text-white px-1">{dateRangeLabel}</span>
+                    <button
+                        onClick={() => setCurrentDate(d => addWeeks(d, 1))}
+                        className="p-1 rounded-lg text-[#a79db9] hover:text-white hover:bg-[#2e2839] transition-colors"
+                    >
                         <span className="material-symbols-outlined text-[20px]">chevron_right</span>
                     </button>
-                    <button onClick={() => setCurrentDate(new Date())} className="ml-2 text-xs font-medium bg-[#2e2839] hover:bg-[#3f374e] text-white px-3 py-1.5 rounded-lg transition-colors">
+                    <button
+                        onClick={() => setCurrentDate(new Date())}
+                        className="ml-1 text-xs font-medium bg-[#2e2839] hover:bg-[#3f374e] text-white px-3 py-1.5 rounded-lg transition-colors"
+                    >
                         Today
                     </button>
                 </div>
             </div>
 
-            {/* Calendar Visual */}
-            <div className="flex flex-1 flex-col gap-4">
-                {/* Days Header */}
-                <div className="grid grid-cols-7 gap-2 text-center text-xs font-medium text-[#a79db9] border-b border-[#2e2839] pb-2 pl-15">
-                    {weekDays.map((day, idx) => (
-                        <div key={idx} className={isSameDay(day, new Date()) ? "text-primary font-bold" : ""}>
-                            {format(day, 'EEE')}
+            {/* ── Day-name row (never scrolls) ── */}
+            <div className="grid shrink-0 grid-cols-[44px_repeat(7,1fr)] border-b border-white/5 pb-2 mb-1">
+                <div /> {/* spacer for time column */}
+                {weekDays.map((day, i) => {
+                    const isToday = isSameDay(day, new Date());
+                    return (
+                        <div key={i} className="text-center">
+                            <div className={`text-[9px] font-bold uppercase tracking-wider ${isToday ? 'text-primary' : 'text-[#9ca3af]'}`}>
+                                {format(day, 'EEE')}
+                            </div>
+                            <div className={`mx-auto mt-0.5 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${isToday ? 'bg-primary text-white shadow-sm shadow-primary/40' : 'text-[#9ca3af]'}`}>
+                                {format(day, 'd')}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/*
+             * ── Scrollable grid body ──
+             * overflow-y-auto on THIS div only — not the card, not the page.
+             * flex-1 fills the remaining card height.
+             */}
+            <div ref={scrollRef} className="flex flex-1 overflow-y-auto custom-scrollbar min-h-0">
+
+                {/* Time-label column */}
+                <div className="w-11 shrink-0 select-none" style={{ height: `${TOTAL_HEIGHT}px` }}>
+                    {HOURS.map(h => (
+                        <div
+                            key={h}
+                            className="pr-1.5 text-right text-[9px] text-[#9ca3af]"
+                            style={{ height: `${HOUR_HEIGHT}px`, paddingTop: '4px' }}
+                        >
+                            {/* Only show label every 2 hours to avoid crowding */}
+                            {h % 2 === 0 ? formatHourLabel(h) : ''}
                         </div>
                     ))}
                 </div>
 
-                {/* Timeline Grid */}
-                <div className="flex-1 grid gap-2 relative grid-cols-[60px_repeat(7,1fr)]">
-                    {/* Time Axis */}
-                    <div className="flex flex-col justify-between text-[10px] text-[#a79db9] pr-2 border-r border-[#2e2839]/30">
-                        <div>08:00 AM</div>
-                        <div>09:00 AM</div>
-                        <div>10:00 AM</div>
-                        <div>11:00 AM</div>
-                        <div>12:00 PM</div>
-                        <div>01:00 PM</div>
-                        <div>02:00 PM</div>
-                        <div>03:00 PM</div>
-                        <div>04:00 PM</div>
-                        <div>05:00 PM</div>
-                        <div>06:00 PM</div>
-                        <div>07:00 PM</div>
-                        <div>08:00 PM</div>
-                    </div>
+                {/* 7-column grid with absolute-positioned events */}
+                <div
+                    className="relative flex-1 grid grid-cols-7 divide-x divide-white/[0.04]"
+                    style={{ height: `${TOTAL_HEIGHT}px` }}
+                >
+                    {/* Hour lines */}
+                    {HOURS.map(h => (
+                        <div
+                            key={h}
+                            className="pointer-events-none absolute left-0 right-0 border-t border-white/[0.04]"
+                            style={{ top: `${h * HOUR_HEIGHT}px` }}
+                        />
+                    ))}
 
-                    {/* Horizontal Lines for Time visual */}
-                    <div className="absolute inset-0 left-12 flex flex-col justify-between pointer-events-none opacity-20">
-                        {[...Array(13)].map((_, i) => (
-                            <div key={i} className="w-full border-t border-[#a79db9] border-dashed"></div>
-                        ))}
-                    </div>
+                    {/* Current time indicator */}
+                    {isCurrentWeek && (
+                        <div
+                            className="pointer-events-none absolute left-0 right-0 z-20 flex items-center border-t-2 border-primary"
+                            style={{ top: `${nowPx}px` }}
+                        >
+                            <div className="h-2 w-2 -ml-1 rounded-full bg-primary shadow-[0_0_6px_rgba(124,59,237,0.9)]" />
+                        </div>
+                    )}
 
-                    {/* Render Columns */}
-                    {weekDays.map((targetDate, index) => {
-                        const dayTimeslots = Timeslots.filter(b => isSameDay(new Date(b.Start), targetDate));
-                        const isToday = isSameDay(targetDate, new Date());
-
+                    {/* Day columns */}
+                    {weekDays.map((day, dayIdx) => {
+                        const daySlots = Timeslots.filter(t => isSameDay(new Date(t.StartsAt), day));
+                        const isToday = isSameDay(day, new Date());
                         return (
-                            <div key={index} className={`relative pt-2 ${isToday ? 'bg-[#1e1b24]/50 rounded-lg' : ''}`}>
-                                {isToday && (
-                                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-primary rounded-full mt-1"></div>
-                                )}
-                                {dayTimeslots.map(Timeslot => {
-                                    const { top, height } = calculateTopAndHeight(Timeslot.Start, Timeslot.End);
-                                    return (
-                                        <div 
-                                            key={Timeslot.ID} 
-                                            className="absolute left-0 right-0 bg-linear-to-b from-primary/30 to-primary/10 border border-primary/40 rounded-md mx-1 flex items-center justify-center overflow-hidden hover:from-primary/50 hover:to-primary/20 transition-colors cursor-pointer" 
-                                            style={{ top, height }}
-                                        >
-                                            <span className="text-[10px] sm:text-xs font-bold text-white line-clamp-2 px-1 text-center">
-                                                {Timeslot.EventName || "Timeslot"}
-                                            </span>
-                                        </div>
-                                    );
-                                })}
+                            <div key={dayIdx} className={`relative ${isToday ? 'bg-primary/[0.025]' : ''}`}>
+                                {daySlots.map(slot => (
+                                    <div
+                                        key={slot.ID}
+                                        className="absolute left-0.5 right-0.5 z-10 cursor-pointer overflow-hidden rounded gradient-slot px-1 py-0.5 transition-all group/slot hover:brightness-110"
+                                        style={getBlockStyle(slot.StartsAt, slot.EndsAt)}
+                                        onClick={() => navigate(`/dashboard/timeslots/${slot.ID}`)}
+                                        title={slot.EventName || 'Timeslot'}
+                                    >
+                                        <span className="line-clamp-2 text-[10px] font-bold leading-tight text-white">
+                                            {slot.EventName || 'Timeslot'}
+                                        </span>
+                                        <span className="hidden text-[9px] text-violet-300 group-hover/slot:block">
+                                            {format(new Date(slot.StartsAt), 'h:mm a')}
+                                        </span>
+                                    </div>
+                                ))}
                             </div>
                         );
                     })}

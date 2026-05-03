@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../store/hooks';
+import { logout } from '../../features/auth/authSlice';
 import axios from 'axios';
 
 interface DashboardSidebarProps {
@@ -9,15 +11,18 @@ interface DashboardSidebarProps {
 
 const DashboardSidebar = ({ onNewTimeslot, userName }: DashboardSidebarProps) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const handleLogout = async () => {
         try {
             await axios.get(`${import.meta.env.VITE_BACKEND_USER}/logout`, { withCredentials: true });
-            window.location.reload();
         } catch (error) {
-            console.error("Logout failed", error);
-            // Optionally reload anyway to clear local client states
-            window.location.reload();
+            console.error('Logout failed', error);
+        } finally {
+            // Always clear Redux state and redirect to homepage
+            dispatch(logout());
+            navigate('/');
         }
     };
 

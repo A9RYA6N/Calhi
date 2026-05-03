@@ -4,6 +4,17 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "date-fns";
 
+const getBaseSlug = (slug: string) => {
+    if (!slug) return '';
+    const parts = slug.split('-');
+    if (parts.length < 2) return slug;
+    const last = parts[parts.length - 1];
+    if (/^\d+$/.test(last)) {
+        return parts.slice(0, -1).join('-');
+    }
+    return slug;
+};
+
 const PublicProfile = () => {
     const { username } = useParams();
     const [timeslots, setTimeslots] = useState<any[]>([]);
@@ -15,7 +26,18 @@ const PublicProfile = () => {
             try {
                 const res = await axios.get(`${import.meta.env.VITE_BACKEND_TIMESLOT}/${username}`);
                 if (res.data?.data) {
-                    setTimeslots(res.data.data);
+                    const allSlots = res.data.data;
+                    const grouped = new Map<string, any>();
+                    
+                    allSlots.forEach((slot: any) => {
+                        const baseSlug = getBaseSlug(slot.Slug || slot.ID.toString());
+                        if (!grouped.has(baseSlug)) {
+                            // Also optionally count occurrences if we wanted to show a badge, but for now just store the first one
+                            grouped.set(baseSlug, { ...slot, _baseSlug: baseSlug });
+                        }
+                    });
+                    
+                    setTimeslots(Array.from(grouped.values()));
                 }
                 try {
                     const userRes = await axios.get(`${import.meta.env.VITE_BACKEND_USER}/${username}`);
@@ -63,7 +85,7 @@ const PublicProfile = () => {
                             <div className="text-center text-[#9ca3af] py-10">Loading availability...</div>
                         ) : timeslots.length > 0 ? (
                             timeslots.map((slot: any) => (
-                                <Link key={slot.ID} to={`/${username}/${slot.Slug || slot.ID}`} state={{ timeslot: slot, hostName }} className="group relative block bg-[#111111] border border-white/5 rounded-xl p-6 transition-all duration-300 hover:scale-[1.01] hover:bg-[#171717] hover:border-primary/30 hover:shadow-[0_0_20px_rgba(124,58,237,0.1)] overflow-hidden">
+                                <Link key={slot.ID} to={`/${username}/${slot._baseSlug || slot.Slug || slot.ID}`} state={{ timeslot: slot, hostName }} className="group relative block bg-[#111111] border border-white/5 rounded-xl p-6 transition-all duration-300 hover:scale-[1.01] hover:bg-[#171717] hover:border-primary/30 hover:shadow-[0_0_20px_rgba(124,58,237,0.1)] overflow-hidden">
                                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/0 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                                     <div className="flex items-center justify-between relative z-10">
                                         <div className="flex-1 pr-6">
@@ -73,8 +95,8 @@ const PublicProfile = () => {
                                                 <span className="text-white/10 text-sm">|</span>
                                                 <span className="flex items-center gap-1.5">
                                                     <span className="material-symbols-outlined text-[14px]">event</span> 
-                                                    {slot.Start && slot.End ? (
-                                                        `${format(new Date(slot.Start), "MMM d, h:mm a")} - ${format(new Date(slot.End), "h:mm a")}`
+                                                    {slot.StartsAt && slot.EndsAt ? (
+                                                        `${format(new Date(slot.StartsAt), "MMM d, h:mm a")} - ${format(new Date(slot.EndsAt), "h:mm a")}`
                                                     ) : "TBD"}
                                                 </span>
                                             </div>

@@ -1,19 +1,19 @@
 export const getIntervals = (timeslot: any) => {
-    if (!timeslot || !timeslot.Start || !timeslot.End || !timeslot.Duration) return [];
-    const start = new Date(timeslot.Start);
-    const end = new Date(timeslot.End);
-    const duration = timeslot.Duration; 
-    
+    if (!timeslot || !timeslot.StartsAt || !timeslot.EndsAt || !timeslot.Duration) return [];
+    const start = new Date(timeslot.StartsAt);
+    const end = new Date(timeslot.EndsAt);
+    const duration = timeslot.Duration;
+
     const confirmedBookings = (timeslot.Bookings || []).filter((b: any) => b.Status !== 'pending');
-    
+
     const intervals = [];
     let current = new Date(start);
     while (current < end) {
         const next = new Date(current.getTime() + duration * 60000);
         if (next <= end) {
             const isBooked = confirmedBookings.some((booking: any) => {
-                const bStart = new Date(booking.Start);
-                const bEnd = new Date(booking.End);
+                const bStart = new Date(booking.StartsAt);
+                const bEnd = new Date(booking.EndsAt);
                 return current >= bStart && current < bEnd;
             });
             

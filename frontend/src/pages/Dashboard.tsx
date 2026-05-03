@@ -6,7 +6,7 @@ import DashboardHeader from "../components/DashboardComponents/DashboardHeader";
 import DashboardStats from "../components/DashboardComponents/DashboardStats";
 import DashboardWeeklyOutlook from "../components/DashboardComponents/DashboardWeeklyOutlook";
 import DashboardRecentActivity from "../components/DashboardComponents/DashboardRecentActivity";
-import TimeslotModal from '@/components/DashboardComponents/TimeslotModal';
+import TimeslotDrawer from '@/components/DashboardComponents/TimeslotDrawer';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -28,7 +28,7 @@ const Dashboard = () => {
 
     // Count only upcoming timeslots (after current time)
     const now = new Date();
-    const upcomingTimeslots = timeslots.filter(t => new Date(t.Start) > now);
+    const upcomingTimeslots = timeslots.filter(t => new Date(t.StartsAt) > now);
 
     return (
         <>
@@ -73,7 +73,7 @@ const Dashboard = () => {
             </main>
             </div>
             
-            <TimeslotModal isOpen={isTimeslotModalOpen} onClose={() => setIsTimeslotModalOpen(false)} />
+            <TimeslotDrawer isOpen={isTimeslotModalOpen} onClose={() => setIsTimeslotModalOpen(false)} />
         </>
     );
 };

@@ -79,6 +79,22 @@
     z-index: 0;
     pointer-events: none;
   }
+
+  /* Calendar timeslot block */
+  .gradient-slot {
+    background: linear-gradient(135deg, rgba(124, 59, 237, 0.25) 0%, rgba(124, 59, 237, 0.1) 100%);
+    border-left: 3px solid #7c3bed;
+  }
+  .gradient-slot:hover {
+    background: linear-gradient(135deg, rgba(124, 59, 237, 0.38) 0%, rgba(124, 59, 237, 0.18) 100%);
+  }
+
+  /* Calendar grid hour cell */
+  .calendar-hour-cell {
+    height: 80px;
+    border-bottom: 1px solid rgba(46, 40, 57, 0.4);
+    position: relative;
+  }
 }
 /* Custom scrollbar for webkit browsers */
 ::-webkit-scrollbar {

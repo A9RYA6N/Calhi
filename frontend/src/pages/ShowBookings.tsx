@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAppSelector } from '../store/hooks';
 import DashboardSidebar from "../components/DashboardComponents/DashboardSidebar";
 import DashboardHeader from "../components/DashboardComponents/DashboardHeader";
-import TimeslotModal from '@/components/DashboardComponents/TimeslotModal';
+import TimeslotDrawer from '@/components/DashboardComponents/TimeslotDrawer';
 import { format } from 'date-fns';
 
 const ShowBookings = () => {
@@ -44,8 +44,8 @@ const ShowBookings = () => {
                                 {bookings.length > 0 ? bookings.map((booking) => {
                                     const timeslot = timeslots.find(t => t.ID === booking.TimeslotID);
                                     const eventName = timeslot?.EventName || "Meeting";
-                                    const startDate = new Date(booking.Start);
-                                    const endDate = new Date(booking.End);
+                                    const startDate = new Date(booking.StartsAt);
+                                    const endDate = new Date(booking.EndsAt);
 
                                     return (
                                         <div key={booking.ID} className="bg-[#171717]/40 backdrop-blur-2xl border border-white/5 rounded-2xl p-6 group hover:border-primary/20 transition-all duration-300 flex items-center justify-between">
@@ -89,7 +89,7 @@ const ShowBookings = () => {
                     </div>
                 </main>
             </div>
-            <TimeslotModal isOpen={isTimeslotModalOpen} onClose={() => setIsTimeslotModalOpen(false)} />
+            <TimeslotDrawer isOpen={isTimeslotModalOpen} onClose={() => setIsTimeslotModalOpen(false)} />
         </>
     );
 };

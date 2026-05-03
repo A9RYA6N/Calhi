@@ -6,9 +6,10 @@ export interface Booking {
     TimeslotID: number;
     ClientName: string;
     ClientEmail: string;
-    Start: string;
-    End: string;
+    StartsAt: string;
+    EndsAt: string;
     Status: string;
     Token?: string;
+    IdempotencyKey?: string;
     Timeslot?: any; // To allow nesting if the backend populates it
 }

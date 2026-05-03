@@ -1,16 +1,22 @@
-import { useNavigate, Link } from "react-router-dom"
+import { useNavigate, Link, Navigate } from "react-router-dom"
 import GenFooter from "../components/GenFooter"
 import HPHeader from "../components/GenHeader"
 import { login } from "../funcs/UserFuncs"
 import { useState, useEffect } from "react"
+import { useAppSelector, useAppDispatch } from "../store/hooks"
+import { fetchUser } from "../features/auth/authThunks"
 import toast, { Toaster } from 'react-hot-toast';
 
 const Login = () => {
-    const navigate=useNavigate()
-    const [email, setEmail]=useState("");
-    const [password, setPassword]=useState("");
-    const [isLoading, setIsLoading]=useState(false);
-    const [error, setError]=useState("")
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+    const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated)
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("")
+
+    if (isAuthenticated) return <Navigate to="/dashboard" replace />;
 
     useEffect(() => {
         if (error) {
@@ -37,11 +43,13 @@ const Login = () => {
             return;
         }
         setIsLoading(true);
-        const response=await login(email, password);
-        if(response.success){
+        const response = await login(email, password);
+        if (response.success) {
+            // Hydrate Redux with the authenticated user BEFORE navigating
+            // so ProtectedRoute sees isAuthenticated: true on first render
+            await dispatch(fetchUser());
             navigate('/dashboard')
-        }
-        else{
+        } else {
             setError(response.message)
         }
         setIsLoading(false);

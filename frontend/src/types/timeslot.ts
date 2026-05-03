@@ -1,8 +1,12 @@
 export interface Timeslot {
     ID: number;
-    Start: string;
-    End: string;
+    StartsAt: string;
+    EndsAt: string;
+    Timezone?: string;
     EventName?: string;
     Duration?: number;
     Bookings?: any[];
+    IsRecurring?: boolean;
+    RecurringDays?: string[]; 
+    Until?: string;         
 }

@@ -1,19 +1,26 @@
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, Navigate } from "react-router-dom";
 import GenFooter from "../components/GenFooter"
 import HPHeader from "../components/GenHeader"
 import { useState, useEffect } from "react";
 import { register } from "../funcs/UserFuncs";
+import { useAppSelector, useAppDispatch } from "../store/hooks";
+import { fetchUser } from "../features/auth/authThunks";
 import toast, { Toaster } from 'react-hot-toast';
 
 const Register = () => {
-    const navigate=useNavigate()
-    const [email, setEmail]=useState("");
-    const [password, setPassword]=useState("");
-    const [name, setName]=useState("");
-    const [username, setUsername]=useState("");
-    const [showPassword, setShowPassword]=useState(false);
-    const [isLoading, setIsLoading]=useState(false);
-    const [error, setError]=useState("")
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+    const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated)
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
+    const [username, setUsername] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("")
+
+    // Already logged in — skip register page
+    if (isAuthenticated) return <Navigate to="/dashboard" replace />;
 
     useEffect(() => {
         if (error) {
@@ -44,11 +51,12 @@ const Register = () => {
             return;
         }
         setIsLoading(true);
-        const response=await register(email, password, name, username);
-        if(response.success){
+        const response = await register(email, password, name, username);
+        if (response.success) {
+            // Hydrate Redux with the authenticated user BEFORE navigating
+            await dispatch(fetchUser());
             navigate('/dashboard')
-        }
-        else{
+        } else {
             setError(response.message)
         }
         setIsLoading(false);
