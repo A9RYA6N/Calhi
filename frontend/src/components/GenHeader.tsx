@@ -6,7 +6,7 @@ const HPHeader = () => {
 
     const navLinks = [
         { label: 'Features', path: '/' },
-        { label: 'Use Cases', path: '/use-cases' },
+        { label: 'Use Cases', path: '/uses' },
         { label: 'Pricing', path: '/pricing' },
     ]
 
