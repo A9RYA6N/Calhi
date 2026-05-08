@@ -60,16 +60,14 @@ const Step1 = ({
                                             <button
                                                 key={slot.ID}
                                                 onClick={() => onSelectSlot(slot)}
-                                                className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl border text-left transition-all duration-200 ${
-                                                    isSelected
+                                                className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl border text-left transition-all duration-200 ${isSelected
                                                         ? 'border-primary bg-primary/10 text-white'
-                                                        : 'border-white/5 bg-[#111111] text-[#9ca3af] hover:border-white/20 hover:text-white'
-                                                }`}
+                                                        : 'border-white/5 bg-[#111111] text-[#9ca3af] '
+                                                    }`}
                                             >
                                                 {/* Date badge */}
-                                                <div className={`flex-shrink-0 w-11 h-11 rounded-lg flex flex-col items-center justify-center text-center transition-colors ${
-                                                    isSelected ? 'bg-primary/20' : 'bg-white/5'
-                                                }`}>
+                                                <div className={`flex-shrink-0 w-11 h-11 rounded-lg flex flex-col items-center justify-center text-center transition-colors ${isSelected ? 'bg-primary/20' : 'bg-white/5'
+                                                    }`}>
                                                     <span className="text-[9px] font-black uppercase tracking-widest leading-none opacity-70">
                                                         {format(slotDate, 'MMM')}
                                                     </span>
@@ -129,8 +127,8 @@ const Step1 = ({
                             {selectedSlot
                                 ? format(new Date(selectedSlot.StartsAt), 'EEEE, MMMM d')
                                 : isMultiOccurrence
-                                ? 'Select a date first'
-                                : 'Available Times'}
+                                    ? 'Select a date first'
+                                    : 'Available Times'}
                         </p>
 
                         {!selectedSlot && isMultiOccurrence ? (
@@ -146,7 +144,7 @@ const Step1 = ({
 
                                     if (isSelected) {
                                         return (
-                                            <div key={idx} className="flex w-full gap-2 items-stretch h-[50px] animate-in slide-in-from-right-2 duration-200">
+                                            <div key={idx} className="flex w-full gap-2 items-stretch h-[50px] animate-in slide-in--2 duration-200">
                                                 <div className="w-1/2 bg-[#171717] border border-[#262626] flex items-center justify-center rounded-xl font-medium text-sm text-[#9ca3af]">
                                                     {timeString}
                                                 </div>
@@ -164,7 +162,7 @@ const Step1 = ({
                                         <button
                                             key={idx}
                                             onClick={() => setSelectedInterval(idx)}
-                                            className="w-full border border-white/5 bg-[#111111] hover:border-primary hover:text-primary transition-all duration-300 py-3.5 rounded-xl text-center font-medium text-sm"
+                                            className="w-full border border-white/5 bg-[#111111] transition-all duration-300 py-3.5 rounded-xl text-center font-medium text-sm"
                                         >
                                             {timeString}
                                         </button>

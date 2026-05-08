@@ -74,10 +74,10 @@ const DashboardWeeklyOutlook = ({ Timeslots }: DashboardWeeklyOutlookProps) => {
 
     return (
         /*
-         * The card is a FIXED-HEIGHT flex column.
-         * Only the inner grid body (scrollRef) scrolls — the card header is always visible.
-         * h-[420px] matches the original dashboard widget height.
-         */
+        * The card is a FIXED-HEIGHT flex column.
+        * Only the inner grid body (scrollRef) scrolls — the card header is always visible.
+        * h-[420px] matches the original dashboard widget height.
+        */
         <div className="glass-card rounded-2xl p-5 lg:col-span-2 flex flex-col h-[420px]">
 
             {/* ── Card header (never scrolls) ── */}
@@ -86,20 +86,20 @@ const DashboardWeeklyOutlook = ({ Timeslots }: DashboardWeeklyOutlookProps) => {
                 <div className="flex items-center gap-1.5">
                     <button
                         onClick={() => setCurrentDate(d => subWeeks(d, 1))}
-                        className="p-1 rounded-lg text-[#a79db9] hover:text-white hover:bg-[#2e2839] transition-colors"
+                        className="p-1 rounded-lg text-[#a79db9] ] transition-colors"
                     >
                         <span className="material-symbols-outlined text-[20px]">chevron_left</span>
                     </button>
                     <span className="text-sm font-medium text-white px-1">{dateRangeLabel}</span>
                     <button
                         onClick={() => setCurrentDate(d => addWeeks(d, 1))}
-                        className="p-1 rounded-lg text-[#a79db9] hover:text-white hover:bg-[#2e2839] transition-colors"
+                        className="p-1 rounded-lg text-[#a79db9] ] transition-colors"
                     >
                         <span className="material-symbols-outlined text-[20px]">chevron_right</span>
                     </button>
                     <button
                         onClick={() => setCurrentDate(new Date())}
-                        className="ml-1 text-xs font-medium bg-[#2e2839] hover:bg-[#3f374e] text-white px-3 py-1.5 rounded-lg transition-colors"
+                        className="ml-1 text-xs font-medium bg-[#2e2839] ] text-white px-3 py-1.5 rounded-lg transition-colors"
                     >
                         Today
                     </button>
@@ -125,10 +125,10 @@ const DashboardWeeklyOutlook = ({ Timeslots }: DashboardWeeklyOutlookProps) => {
             </div>
 
             {/*
-             * ── Scrollable grid body ──
-             * overflow-y-auto on THIS div only — not the card, not the page.
-             * flex-1 fills the remaining card height.
-             */}
+ * ── Scrollable grid body ──
+ * overflow-y-auto on THIS div only — not the card, not the page.
+ * flex-1 fills the remaining card height.
+ */}
             <div ref={scrollRef} className="flex flex-1 overflow-y-auto custom-scrollbar min-h-0">
 
                 {/* Time-label column */}

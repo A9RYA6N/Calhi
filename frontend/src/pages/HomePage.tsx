@@ -24,10 +24,10 @@ const HomePage = () => {
                             The smart scheduling engine for professionals who manage complexity. Real-time availability, zero conflicts, complete peace of mind.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                            <button className="btn-gradient h-12 px-8 rounded-xl text-white font-bold text-base shadow-lg shadow-primary/25 hover:scale-105 transition-transform">
+                            <button className="btn-gradient h-12 px-8 rounded-xl text-white font-bold text-base shadow-lg shadow-primary/25 transition-transform">
                                 Start Timeslot Free
                             </button>
-                            <button className="h-12 px-8 rounded-xl bg-surface-dark border border-white/10 text-white font-medium hover:bg-white/5 transition-colors flex items-center justify-center gap-2">
+                            <button className="h-12 px-8 rounded-xl bg-surface-dark border border-white/10 text-white font-medium transition-colors flex items-center justify-center gap-2">
                                 <span className="material-symbols-outlined text-[20px]">play_circle</span>
                                 See How It Works
                             </button>
@@ -35,7 +35,7 @@ const HomePage = () => {
 
                         {/* Abstract Hero Visual */}
                         <div className="mt-20 relative w-full max-w-6xl mx-auto aspect-video md:aspect-21/9 rounded-2xl overflow-hidden glass-card border-t border-white/10 shadow-2xl">
-                            <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-secondary/5"></div>
+                            <div className="absolute inset-0 bg-linear- "></div>
                             {/* Mockup content inside hero */}
                             <div className="relative h-full w-full p-8 flex items-center justify-center">
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full h-full opacity-80">
@@ -60,7 +60,7 @@ const HomePage = () => {
                                         </div>
                                         <div className="h-4 w-1/2 bg-white/10 rounded"></div>
                                         <div className="h-10"></div>
-                                        <div className="flex-1 bg-linear-to-r from-primary/20 to-secondary/20 border border-primary/30 rounded p-3 text-sm text-white flex items-center justify-center backdrop-blur-sm">
+                                        <div className="flex-1 bg-linear- border border-primary/30 rounded p-3 text-sm text-white flex items-center justify-center backdrop-blur-sm">
                                             <span className="material-symbols-outlined mr-2 text-primary">auto_awesome</span>
                                             Smart Slot Found
                                         </div>
@@ -92,7 +92,7 @@ const HomePage = () => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {/* Feature 1 */}
                             <div className="glass-card p-8 rounded-2xl flex flex-col h-full group">
-                                <div className="w-12 h-12 rounded-lg bg-surface-dark border border-white/10 flex items-center justify-center mb-6 group-hover:border-primary/50 transition-colors">
+                                <div className="w-12 h-12 rounded-lg bg-surface-dark border border-white/10 flex items-center justify-center mb-6 -primary/50 transition-colors">
                                     <span className="material-symbols-outlined text-3xl icon-gradient-text">schedule</span>
                                 </div>
                                 <h3 className="text-xl font-bold text-white mb-3">Real-time Availability</h3>
@@ -102,7 +102,7 @@ const HomePage = () => {
                             </div>
                             {/* Feature 2 */}
                             <div className="glass-card p-8 rounded-2xl flex flex-col h-full group">
-                                <div className="w-12 h-12 rounded-lg bg-surface-dark border border-white/10 flex items-center justify-center mb-6 group-hover:border-primary/50 transition-colors">
+                                <div className="w-12 h-12 rounded-lg bg-surface-dark border border-white/10 flex items-center justify-center mb-6 -primary/50 transition-colors">
                                     <span className="material-symbols-outlined text-3xl icon-gradient-text">verified_user</span>
                                 </div>
                                 <h3 className="text-xl font-bold text-white mb-3">Conflict Detection</h3>
@@ -112,7 +112,7 @@ const HomePage = () => {
                             </div>
                             {/* Feature 3 */}
                             <div className="glass-card p-8 rounded-2xl flex flex-col h-full group">
-                                <div className="w-12 h-12 rounded-lg bg-surface-dark border border-white/10 flex items-center justify-center mb-6 group-hover:border-primary/50 transition-colors">
+                                <div className="w-12 h-12 rounded-lg bg-surface-dark border border-white/10 flex items-center justify-center mb-6 -primary/50 transition-colors">
                                     <span className="material-symbols-outlined text-3xl icon-gradient-text">public</span>
                                 </div>
                                 <h3 className="text-xl font-bold text-white mb-3">Timezone Normalization</h3>
@@ -259,13 +259,13 @@ const HomePage = () => {
                     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
                         <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Ready to take back your time?</h2>
                         <p className="text-xl text-gray-400 mb-10">Join 10,000+ professionals who trust Calhi to manage their complex schedules.</p>
-                        <button className="btn-gradient px-10 py-4 rounded-xl text-lg font-bold text-white shadow-xl shadow-primary/30 hover:scale-105 transition-transform">
+                        <button className="btn-gradient px-10 py-4 rounded-xl text-lg font-bold text-white shadow-xl shadow-primary/30 transition-transform">
                             Get Started for Free
                         </button>
                         <p className="mt-4 text-sm text-gray-500">No credit card required. 14-day free trial.</p>
                     </div>
                     {/* Background decoration for CTA */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-3xl max-h-75 bg-linear-to-r from-primary/10 via-secondary/10 to-primary/10 blur-[100px] z-0"></div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-3xl max-h-75 bg-linear- blur-[100px] z-0"></div>
                 </section>
             </main>
             <GenFooter />

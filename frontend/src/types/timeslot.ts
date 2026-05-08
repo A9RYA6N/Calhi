@@ -7,6 +7,6 @@ export interface Timeslot {
     Duration?: number;
     Bookings?: any[];
     IsRecurring?: boolean;
-    RecurringDays?: string[]; 
-    Until?: string;         
+    RecurringDays?: string[];
+    Until?: string;
 }

@@ -9,7 +9,7 @@ export interface CreateTimeslotPayload {
     duration: number;
     isrecurring: boolean;
     recurringdays?: string[];
-    until?: string;            // "yyyy-MM-dd" — only present when isrecurring is true
+    until?: string;
 }
 
 export const createTimeslot = async (
@@ -24,7 +24,7 @@ export const createTimeslot = async (
 ): Promise<{ success: boolean; message: string }> => {
     try {
         const [startHours, startMinutes] = startTime.split(':').map(Number);
-        const [endHours, endMinutes]=endTime.split(':').map(Number);
+        const [endHours, endMinutes] = endTime.split(':').map(Number);
 
         // Build local Date objects for start and end
         const startDateTime = new Date(date);
@@ -37,14 +37,14 @@ export const createTimeslot = async (
         // e.g. "2026-05-01T10:00:00". No UTC offset appended.
         // DO NOT use .toISOString() which converts to UTC and appends 'Z'.
         const naiveStart = format(startDateTime, "yyyy-MM-dd'T'HH:mm:ss");
-        const naiveEnd   = format(endDateTime,   "yyyy-MM-dd'T'HH:mm:ss");
+        const naiveEnd = format(endDateTime, "yyyy-MM-dd'T'HH:mm:ss");
 
         // Browser-reported IANA timezone, e.g. "Asia/Kolkata"
         const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
         const payload: CreateTimeslotPayload = {
-            startsat:  naiveStart,
-            endsat:    naiveEnd,
+            startsat: naiveStart,
+            endsat: naiveEnd,
             timezone,
             eventname: eventName,
             duration,

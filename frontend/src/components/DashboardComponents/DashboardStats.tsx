@@ -6,20 +6,20 @@ const DashboardStats = ({ timeslotsCount }: DashboardStatsProps) => {
     return (
         <section className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {/* Card 1 */}
-            <div className="glass-card relative overflow-hidden rounded-2xl p-6 transition-transform hover:-translate-y-1 duration-300">
+            <div className="glass-card relative overflow-hidden rounded-2xl p-6 transition-transform duration-300">
                 <div className="flex items-start justify-between">
                     <div>
                         <p className="text-sm font-medium text-[#a79db9]">Upcoming Timeslots</p>
                         <h3 className="mt-2 text-3xl font-bold text-white">{timeslotsCount}</h3>
                     </div>
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20 text-primary">
-                        <span className="material-symbols-outlined">event_available</span>
-                    </div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15 text-primary/80">
+                    <span className="material-symbols-outlined">event_available</span>
+                </div>
                 </div>
             </div>
 
             {/* Card 2 */}
-            <div className="glass-card relative overflow-hidden rounded-2xl p-6 transition-transform hover:-translate-y-1 duration-300">
+            <div className="glass-card relative overflow-hidden rounded-2xl p-6 transition-transform duration-300">
                 <div className="flex items-start justify-between">
                     <div className="flex-1">
                         <p className="text-sm font-medium text-[#a79db9]">Daily Motivation</p>
@@ -40,7 +40,7 @@ const DashboardStats = ({ timeslotsCount }: DashboardStatsProps) => {
             </div>
 
             {/* Card 3 */}
-            <div className="glass-card relative overflow-hidden rounded-2xl p-6 transition-transform hover:-translate-y-1 duration-300">
+            <div className="glass-card relative overflow-hidden rounded-2xl p-6 transition-transform duration-300">
                 <div className="flex items-start justify-between">
                     <div>
                         <p className="text-sm font-medium text-[#a79db9]">Efficiency Score</p>
@@ -51,7 +51,7 @@ const DashboardStats = ({ timeslotsCount }: DashboardStatsProps) => {
                     </div>
                 </div>
                 <div className="mt-4 w-full bg-[#2e2839] rounded-full h-1.5">
-                    <div className="bg-linear-to-r from-primary to-blue-500 h-1.5 rounded-full" style={{ width: '85%' }}></div>
+                    <div className="bg-primary/70 h-1.5 rounded-full" style={{ width: '85%' }}></div>
                 </div>
             </div>
         </section>

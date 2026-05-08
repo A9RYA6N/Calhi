@@ -3,7 +3,7 @@ const DashboardRecentActivity = () => {
         <div className="glass-card rounded-2xl p-6 flex flex-col h-full min-h-100">
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-bold text-white">Recent Activity</h3>
-                <button className="text-[#a79db9] hover:text-white">
+                <button className="text-[#a79db9] ">
                     <span className="material-symbols-outlined text-[20px]">more_horiz</span>
                 </button>
             </div>
@@ -19,7 +19,7 @@ const DashboardRecentActivity = () => {
                             <span className="material-symbols-outlined text-[12px] text-white">check</span>
                         </div>
                     </div>
-                    <div className="flex-1 rounded-xl bg-[#2e2839]/30 p-3 hover:bg-[#2e2839]/50 transition-colors cursor-pointer">
+                    <div className="flex-1 rounded-xl bg-[#2e2839]/30 p-3 transition-colors cursor-pointer">
                         <div className="flex justify-between items-start mb-1">
                             <p className="text-sm font-semibold text-white">Timeslot Confirmed</p>
                             <span className="text-[10px] text-[#a79db9]">2m ago</span>
@@ -35,7 +35,7 @@ const DashboardRecentActivity = () => {
                             <span className="material-symbols-outlined text-[12px] text-white">mail</span>
                         </div>
                     </div>
-                    <div className="flex-1 rounded-xl bg-[#2e2839]/30 p-3 hover:bg-[#2e2839]/50 transition-colors cursor-pointer">
+                    <div className="flex-1 rounded-xl bg-[#2e2839]/30 p-3 transition-colors cursor-pointer">
                         <div className="flex justify-between items-start mb-1">
                             <p className="text-sm font-semibold text-white">Reminder Sent</p>
                             <span className="text-[10px] text-[#a79db9]">1h ago</span>
@@ -51,15 +51,15 @@ const DashboardRecentActivity = () => {
                             <span className="material-symbols-outlined text-[12px] text-white">warning</span>
                         </div>
                     </div>
-                    <div className="flex-1 rounded-xl bg-[#2e2839]/30 p-3 hover:bg-[#2e2839]/50 transition-colors cursor-pointer">
+                    <div className="flex-1 rounded-xl bg-[#2e2839]/30 p-3 transition-colors cursor-pointer">
                         <div className="flex justify-between items-start mb-1">
                             <p className="text-sm font-semibold text-white">Reschedule Request</p>
                             <span className="text-[10px] text-[#a79db9]">3h ago</span>
                         </div>
                         <p className="text-xs text-[#a79db9]">Sarah requested to move the design review to Friday.</p>
                         <div className="mt-2 flex gap-2">
-                            <button className="px-2 py-1 text-[10px] font-bold bg-primary/20 text-primary rounded hover:bg-primary/30">Accept</button>
-                            <button className="px-2 py-1 text-[10px] font-bold bg-[#443b54] text-white rounded hover:bg-[#574c6b]">Decline</button>
+                            <button className="px-2 py-1 text-[10px] font-bold bg-primary/20 text-primary rounded ">Accept</button>
+                            <button className="px-2 py-1 text-[10px] font-bold bg-[#443b54] text-white rounded ]">Decline</button>
                         </div>
                     </div>
                 </div>
@@ -71,7 +71,7 @@ const DashboardRecentActivity = () => {
                             <span className="material-symbols-outlined text-[12px] text-white">add_task</span>
                         </div>
                     </div>
-                    <div className="flex-1 rounded-xl bg-[#2e2839]/30 p-3 hover:bg-[#2e2839]/50 transition-colors cursor-pointer">
+                    <div className="flex-1 rounded-xl bg-[#2e2839]/30 p-3 transition-colors cursor-pointer">
                         <div className="flex justify-between items-start mb-1">
                             <p className="text-sm font-semibold text-white">Task Completed</p>
                             <span className="text-[10px] text-[#a79db9]">5h ago</span>

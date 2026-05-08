@@ -8,13 +8,13 @@ import { store } from './store/store'
 import { AppInitializer } from './components/AppInitializer'
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <AppInitializer>
-          <App />
-        </AppInitializer>
-      </BrowserRouter>
-    </Provider>
-  </StrictMode>,
+    <StrictMode>
+        <Provider store={store}>
+            <BrowserRouter>
+                <AppInitializer>
+                    <App />
+                </AppInitializer>
+            </BrowserRouter>
+        </Provider>
+    </StrictMode>,
 )

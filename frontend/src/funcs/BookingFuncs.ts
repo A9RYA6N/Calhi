@@ -8,7 +8,7 @@ interface ScheduleEventParams {
     guestName: string;
     guestEmail: string;
     hasAuthCookie: boolean;
-    idempotencyKey: string;       // generated once per attempt in Booking.tsx
+    idempotencyKey: string; // generated once per attempt in Booking.tsx
     setGuestName: (val: string) => void;
     setGuestEmail: (val: string) => void;
     setStep: (step: number) => void;

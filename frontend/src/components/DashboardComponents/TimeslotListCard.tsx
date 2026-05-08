@@ -14,7 +14,7 @@ const TimeslotListCard: React.FC<TimeslotListCardProps> = ({ slot, bookingCount 
 
     return (
         <div
-            className="flex items-center justify-between p-4 bg-[#1d1924] border border-white/5 rounded-xl hover:border-primary/30 hover:bg-[#25202e] hover:shadow-lg hover:shadow-black/20 transition-all cursor-pointer group"
+            className="flex items-center justify-between p-4 bg-[#1d1924] border border-white/5 rounded-xl ] /20 transition-all cursor-pointer group"
             onClick={() => navigate(`/dashboard/timeslots/${slot.ID}`)}
         >
             <div className="flex items-center gap-4">
@@ -22,7 +22,7 @@ const TimeslotListCard: React.FC<TimeslotListCardProps> = ({ slot, bookingCount 
                 <div className="w-2 h-2 rounded-full bg-primary shadow-sm shadow-primary/50 shrink-0" />
 
                 <div className="flex flex-col gap-0.5">
-                    <span className="text-white font-semibold text-sm group-hover:text-violet-200 transition-colors">
+                    <span className="text-white font-semibold text-sm -violet-200 transition-colors">
                         {slot.EventName || 'Timeslot'}
                     </span>
                     <span className="text-[#9ca3af] text-xs">
@@ -41,16 +41,15 @@ const TimeslotListCard: React.FC<TimeslotListCardProps> = ({ slot, bookingCount 
                 )}
 
                 {/* Booking count badge */}
-                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${
-                    bookingCount > 0
+                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${bookingCount > 0
                         ? 'bg-primary/15 text-primary'
                         : 'bg-white/5 text-[#9ca3af]'
-                }`}>
+                    }`}>
                     {bookingCount} booking{bookingCount !== 1 ? 's' : ''}
                 </span>
 
                 {/* Arrow */}
-                <span className="material-symbols-outlined text-[#9ca3af] group-hover:text-white group-hover:translate-x-0.5 transition-all text-[20px]">
+                <span className="material-symbols-outlined text-[#9ca3af] -white -x-0.5 transition-all text-[20px]">
                     arrow_forward
                 </span>
             </div>

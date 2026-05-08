@@ -67,9 +67,9 @@ const ShowTimeslots = () => {
                             </div>
 
                             <div className="flex items-center gap-3">
-                                <Link 
-                                    to={`/${userSlug}`} 
-                                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#171717] border border-white/5 hover:bg-white/10 transition-colors text-white text-sm font-bold shadow-lg"
+                                <Link
+                                    to={`/${userSlug}`}
+                                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#171717] border border-white/5 transition-colors text-white text-sm font-bold shadow-lg"
                                     target="_blank"
                                 >
                                     <span className="material-symbols-outlined text-[18px]">public</span>
@@ -78,15 +78,15 @@ const ShowTimeslots = () => {
 
                                 {/* Month label + week nav */}
                                 <div className="flex items-center gap-2">
-                                    <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#171717] border border-white/5 text-white text-sm font-medium hover:border-primary/30 transition-colors">
+                                    <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#171717] border border-white/5 text-white text-sm font-medium transition-colors">
                                         <span className="material-symbols-outlined text-[18px] text-[#9ca3af]">calendar_today</span>
                                         {monthLabel}
                                     </button>
                                     <div className="flex bg-[#171717] rounded-lg p-1 border border-white/5">
-                                        <button onClick={prevWeek} className="p-1.5 hover:bg-white/10 rounded text-[#9ca3af] hover:text-white transition-colors">
+                                        <button onClick={prevWeek} className="p-1.5 rounded text-[#9ca3af] transition-colors">
                                             <span className="material-symbols-outlined text-[18px]">chevron_left</span>
                                         </button>
-                                        <button onClick={nextWeek} className="p-1.5 hover:bg-white/10 rounded text-[#9ca3af] hover:text-white transition-colors">
+                                        <button onClick={nextWeek} className="p-1.5 rounded text-[#9ca3af] transition-colors">
                                             <span className="material-symbols-outlined text-[18px]">chevron_right</span>
                                         </button>
                                     </div>
@@ -95,7 +95,7 @@ const ShowTimeslots = () => {
                                 {/* New timeslot */}
                                 <button
                                     onClick={() => setDrawerOpen(true)}
-                                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 transition-colors text-white text-sm font-bold shadow-lg shadow-primary/25"
+                                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary transition-colors text-white text-sm font-bold shadow-lg shadow-primary/25"
                                 >
                                     <span className="material-symbols-outlined text-[18px]">add</span>
                                     New Timeslot
@@ -109,11 +109,10 @@ const ShowTimeslots = () => {
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
-                                    className={`pb-3 text-sm font-bold border-b-2 transition-all capitalize ${
-                                        activeTab === tab
+                                    className={`pb-3 text-sm font-bold border-b-2 transition-all capitalize ${activeTab === tab
                                             ? 'border-primary text-white'
-                                            : 'border-transparent text-[#9ca3af] hover:text-white'
-                                    }`}
+                                            : 'border-transparent text-[#9ca3af] '
+                                        }`}
                                 >
                                     {tab === 'calendar' ? 'Calendar' : 'Timeslots'}
                                 </button>

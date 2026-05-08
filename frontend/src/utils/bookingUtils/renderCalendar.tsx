@@ -5,11 +5,11 @@ export const renderCalendar = (timeslot: any) => {
     const date = new Date(timeslot.StartsAt);
     const month = format(date, 'MMMM yyyy');
     const day = date.getDate();
-    
+
     const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
     const startDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-    const offset = startDay === 0 ? 6 : startDay - 1; 
-    
+    const offset = startDay === 0 ? 6 : startDay - 1;
+
     const blanks = Array.from({ length: offset }).map((_, i) => <div key={`b-${i}`} className="w-10 h-10 mx-auto"></div>);
     const days = Array.from({ length: daysInMonth }).map((_, i) => {
         const d = i + 1;

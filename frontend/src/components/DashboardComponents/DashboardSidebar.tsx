@@ -29,7 +29,7 @@ const DashboardSidebar = ({ onNewTimeslot, userName }: DashboardSidebarProps) =>
     return (
         <aside className="hidden w-64 flex-col border-r border-[#2e2839] bg-[#131118] lg:flex">
             <div className="flex h-16 items-center gap-3 px-6 border-b border-[#2e2839]/50">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-primary to-blue-500 text-white shadow-lg shadow-primary/20">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/20 text-primary shadow-lg">
                     <span className="material-symbols-outlined text-[20px]">calendar_month</span>
                 </div>
                 <h1 className="text-xl font-bold tracking-tight text-white">Calhi</h1>
@@ -38,25 +38,25 @@ const DashboardSidebar = ({ onNewTimeslot, userName }: DashboardSidebarProps) =>
             <div className="flex flex-1 flex-col justify-between overflow-y-auto px-4 py-6">
                 <nav className="flex flex-col gap-2">
                     <p className="px-2 text-xs font-semibold uppercase tracking-wider text-[#a79db9]">Menu</p>
-                    
+
                     {/* Dashboard */}
                     <Link to="/dashboard" className="group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-white transition-all overflow-hidden">
-                        <div className="absolute inset-0 hover:bg-white/10 opacity-10"></div>
+                        <div className="absolute inset-0 opacity-10"></div>
                         <span className="material-symbols-outlined relative z-10">dashboard</span>
                         <span className="relative z-10 font-medium">Dashboard</span>
                     </Link>
 
-                    <Link to="/dashboard/timeslots" className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] hover:bg-[#2e2839] hover:text-white transition-colors">
+                    <Link to="/dashboard/timeslots" className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] ] transition-colors">
                         <span className="material-symbols-outlined">calendar_today</span>
                         <span className="font-medium">My schedule</span>
                     </Link>
 
-                    <Link to="/dashboard/bookings" className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] hover:bg-[#2e2839] hover:text-white transition-colors">
+                    <Link to="/dashboard/bookings" className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] ] transition-colors">
                         <span className="material-symbols-outlined">book</span>
                         <span className="font-medium">Bookings</span>
                     </Link>
 
-                    <a className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] hover:bg-[#2e2839] hover:text-white transition-colors" href="#">
+                    <a className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] ] transition-colors" href="#">
                         <span className="material-symbols-outlined">bar_chart</span>
                         <span className="font-medium">Analytics</span>
                     </a>
@@ -66,25 +66,25 @@ const DashboardSidebar = ({ onNewTimeslot, userName }: DashboardSidebarProps) =>
 
                     <p className="px-2 text-xs font-semibold uppercase tracking-wider text-[#a79db9]">System</p>
 
-                    <a className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] hover:bg-[#2e2839] hover:text-white transition-colors" href="#">
+                    <a className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] ] transition-colors" href="#">
                         <span className="material-symbols-outlined">settings</span>
                         <span className="font-medium">Settings</span>
                     </a>
 
-                    <a className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] hover:bg-[#2e2839] hover:text-white transition-colors" href="#">
+                    <a className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[#a79db9] ] transition-colors" href="#">
                         <span className="material-symbols-outlined">help</span>
                         <span className="font-medium">Help Center</span>
                     </a>
                 </nav>
 
                 <div className="mt-auto flex flex-col gap-4 relative">
-                    
+
                     {/* Logout Menu Popup */}
                     {isMenuOpen && (
-                        <div className="absolute bottom-[140px] left-0 right-0 bg-[#1e1b24] rounded-xl border border-red-500/30 p-2 shadow-2xl z-50 transform transition-all animate-in slide-in-from-bottom-2 fade-in">
-                            <button 
+                        <div className="absolute bottom-[140px] left-0 right-0 bg-[#1e1b24] rounded-xl border border-red-500/30 p-2 shadow-2xl z-50 transform transition-all animate-in slide-in--2 fade-in">
+                            <button
                                 onClick={handleLogout}
-                                className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-500/10 rounded-lg transition-colors text-left"
+                                className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-semibold text-red-500 -500/10 rounded-lg transition-colors text-left"
                             >
                                 <div className="flex items-center gap-2">
                                     <span className="material-symbols-outlined text-[18px]">logout</span>
@@ -94,14 +94,14 @@ const DashboardSidebar = ({ onNewTimeslot, userName }: DashboardSidebarProps) =>
                         </div>
                     )}
 
-                    <div 
-                        className="glass-card rounded-xl p-4 cursor-pointer hover:bg-white/5 transition-colors select-none"
+                    <div
+                        className="glass-card rounded-xl p-4 cursor-pointer transition-colors select-none"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                     >
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="h-10 w-10 overflow-hidden rounded-full border border-white/10">
-                                    <img alt="Profile picture of Alex" className="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgH2AUMiJPnwVia6_-v1rDaoRlUAIWMcqQlqYE1ZhNDWTOF1eFmwEvdlaXf7LSrqlaZvpUJndoIwlqb3R_bKb8Vi6_f2jT66MvtedEcX9kO46sRbCsddcTp6rosVlb0aFIZGRNgJw8qzjR4nbXAzZKzHGiCwLMy2hf-QVLKZF3FSQnC9jcKrkFn8KaDYUE-tdqt2K74-bm_RwYeeQI9tGU_X8dGH3ZpOU4ort6TkCl0HOUy_1qFy930r0IyJFtHSOt7IUS5x0cf5k"/>
+                                    <img alt="Profile picture of Alex" className="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgH2AUMiJPnwVia6_-v1rDaoRlUAIWMcqQlqYE1ZhNDWTOF1eFmwEvdlaXf7LSrqlaZvpUJndoIwlqb3R_bKb8Vi6_f2jT66MvtedEcX9kO46sRbCsddcTp6rosVlb0aFIZGRNgJw8qzjR4nbXAzZKzHGiCwLMy2hf-QVLKZF3FSQnC9jcKrkFn8KaDYUE-tdqt2K74-bm_RwYeeQI9tGU_X8dGH3ZpOU4ort6TkCl0HOUy_1qFy930r0IyJFtHSOt7IUS5x0cf5k" />
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-sm font-semibold text-white">{userName || "Alex Morgan"}</span>
@@ -114,7 +114,7 @@ const DashboardSidebar = ({ onNewTimeslot, userName }: DashboardSidebarProps) =>
                         </div>
                     </div>
 
-                    <button onClick={onNewTimeslot} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-bold text-white shadow-lg shadow-primary/25 transition-transform hover:scale-[1.02] active:scale-[0.98]">
+                    <button onClick={onNewTimeslot} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary/80 py-3 text-sm font-bold text-white transition-colors">
                         <span className="material-symbols-outlined text-[20px]">add</span>
                         New Timeslot
                     </button>

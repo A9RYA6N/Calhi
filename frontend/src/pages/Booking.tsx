@@ -119,7 +119,7 @@ const Booking = () => {
             await handleScheduleEventFn({
                 selectedInterval,
                 intervals,
-                timeslot: selectedSlot,          // use the selected occurrence
+                timeslot: selectedSlot, // use the selected occurrence
                 guestName,
                 guestEmail,
                 hasAuthCookie,

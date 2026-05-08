@@ -6,7 +6,7 @@ interface Step2Props {
     setGuestEmail: (val: string) => void;
     setStep: (step: number) => void;
     handleScheduleEvent: (e?: React.FormEvent) => void;
-    isSubmitting: boolean;   // in-flight guard passed from Booking.tsx
+    isSubmitting: boolean; // in-flight guard passed from Booking.tsx
 }
 
 const Step2 = ({
@@ -20,7 +20,7 @@ const Step2 = ({
     isSubmitting,
 }: Step2Props) => {
     return (
-        <div className="w-full md:w-2/3 p-8 md:p-12 bg-[#171717]/30 transition-all animate-in fade-in slide-in-from-right-4 duration-300">
+        <div className="w-full md:w-2/3 p-8 md:p-12 bg-[#171717]/30 transition-all animate-in fade-in slide-in--4 duration-300">
             <h2 className="font-headline font-bold text-2xl text-white mb-8">
                 {hasAuthCookie ? 'Confirm Booking' : 'Enter Details'}
             </h2>
@@ -53,7 +53,7 @@ const Step2 = ({
                             <button
                                 onClick={() => setStep(1)}
                                 disabled={isSubmitting}
-                                className="flex-1 px-8 py-3.5 rounded-xl text-white font-bold text-base border border-white/10 hover:bg-white/5 transition-colors bg-[#0a0a0a] disabled:opacity-40 disabled:pointer-events-none"
+                                className="flex-1 px-8 py-3.5 rounded-xl text-white font-bold text-base border border-white/10 transition-colors bg-[#0a0a0a] disabled:opacity-40 disabled:pointer-events-none"
                             >
                                 No, Go Back
                             </button>
@@ -91,7 +91,7 @@ const Step2 = ({
                         </div>
                         <div>
                             <button
-                                className="text-secondary hover:text-primary transition-colors flex items-center gap-2 font-medium text-sm px-2 py-1 -ml-2 rounded-md hover:bg-white/5"
+                                className="text-secondary transition-colors flex items-center gap-2 font-medium text-sm px-2 py-1 -ml-2 rounded-md "
                                 type="button"
                                 disabled={isSubmitting}
                             >

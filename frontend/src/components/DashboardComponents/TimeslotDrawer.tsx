@@ -27,20 +27,20 @@ const TimeslotDrawer: React.FC<TimeslotDrawerProps> = ({ isOpen, onClose }) => {
     const dispatch = useAppDispatch();
 
     // ── Core fields ─────────────────────────────────────────────────────────
-    const [date, setDate]           = useState<Date | undefined>(new Date());
+    const [date, setDate] = useState<Date | undefined>(new Date());
     const [startTime, setStartTime] = useState("09:00");
-    const [endTime, setEndTime]     = useState("21:00");
+    const [endTime, setEndTime] = useState("21:00");
     const [eventName, setEventName] = useState("");
-    const [duration, setDuration]   = useState("30");
+    const [duration, setDuration] = useState("30");
 
     // ── Calendar popover states ──────────────────────────────────────────────
-    const [isCalendarOpen, setIsCalendarOpen]   = useState(false);
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [isUntilCalendarOpen, setIsUntilCalendarOpen] = useState(false);
 
     // ── Recurring fields ─────────────────────────────────────────────────────
-    const [isRecurring, setIsRecurring]     = useState(false);
+    const [isRecurring, setIsRecurring] = useState(false);
     const [recurringDays, setRecurringDays] = useState<string[]>([]);
-    const [untilDate, setUntilDate]         = useState<Date | null>(null);
+    const [untilDate, setUntilDate] = useState<Date | null>(null);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -133,7 +133,7 @@ const TimeslotDrawer: React.FC<TimeslotDrawerProps> = ({ isOpen, onClose }) => {
                     </div>
                     <button
                         onClick={onClose}
-                        className="w-9 h-9 rounded-xl flex items-center justify-center text-[#9ca3af] hover:text-white hover:bg-white/10 transition-all"
+                        className="w-9 h-9 rounded-xl flex items-center justify-center text-[#9ca3af] transition-all"
                     >
                         <span className="material-symbols-outlined">close</span>
                     </button>
@@ -163,7 +163,7 @@ const TimeslotDrawer: React.FC<TimeslotDrawerProps> = ({ isOpen, onClose }) => {
                             {isRecurring ? "First Occurrence" : "Date"}
                         </label>
                         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                            <PopoverTrigger className="w-full h-12 bg-[#171717] border border-white/5 rounded-xl flex items-center justify-between px-4 hover:border-primary/30 transition-all cursor-pointer text-left">
+                            <PopoverTrigger className="w-full h-12 bg-[#171717] border border-white/5 rounded-xl flex items-center justify-between px-4 transition-all cursor-pointer text-left">
                                 <span className="flex items-center gap-3">
                                     <span className="material-symbols-outlined text-[#9ca3af] text-[20px]">calendar_today</span>
                                     <span className="text-white text-sm font-medium">{date ? format(date, "MMM d, yyyy") : "Pick a date"}</span>
@@ -233,7 +233,7 @@ const TimeslotDrawer: React.FC<TimeslotDrawerProps> = ({ isOpen, onClose }) => {
                     <div className="space-y-4">
                         {/* Toggle row */}
                         <div
-                            className="flex items-center justify-between p-4 rounded-xl bg-[#171717] border border-white/5 cursor-pointer hover:border-primary/30 transition-all"
+                            className="flex items-center justify-between p-4 rounded-xl bg-[#171717] border border-white/5 cursor-pointer transition-all"
                             onClick={() => setIsRecurring(prev => !prev)}
                         >
                             <div className="flex items-center gap-3">
@@ -266,11 +266,10 @@ const TimeslotDrawer: React.FC<TimeslotDrawerProps> = ({ isOpen, onClose }) => {
                                                     key={day.value}
                                                     type="button"
                                                     onClick={() => toggleDay(day.value)}
-                                                    className={`px-3 py-1.5 rounded-lg text-xs font-bold tracking-wider transition-all border ${
-                                                        selected
+                                                    className={`px-3 py-1.5 rounded-lg text-xs font-bold tracking-wider transition-all border ${selected
                                                             ? 'bg-primary/20 border-primary text-primary'
-                                                            : 'bg-[#171717] border-white/5 text-[#9ca3af] hover:border-white/20 hover:text-white'
-                                                    }`}
+                                                            : 'bg-[#171717] border-white/5 text-[#9ca3af] '
+                                                        }`}
                                                 >
                                                     {day.label}
                                                 </button>
@@ -283,7 +282,7 @@ const TimeslotDrawer: React.FC<TimeslotDrawerProps> = ({ isOpen, onClose }) => {
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9ca3af]">Repeat Until</label>
                                     <Popover open={isUntilCalendarOpen} onOpenChange={setIsUntilCalendarOpen}>
-                                        <PopoverTrigger className="w-full h-12 bg-[#171717] border border-white/5 rounded-xl flex items-center justify-between px-4 hover:border-primary/30 transition-all cursor-pointer text-left">
+                                        <PopoverTrigger className="w-full h-12 bg-[#171717] border border-white/5 rounded-xl flex items-center justify-between px-4 transition-all cursor-pointer text-left">
                                             <span className="flex items-center gap-3">
                                                 <span className="material-symbols-outlined text-[#9ca3af] text-[20px]">event</span>
                                                 <span className={`text-sm font-medium ${untilDate ? 'text-white' : 'text-[#9ca3af]/50'}`}>
@@ -321,7 +320,7 @@ const TimeslotDrawer: React.FC<TimeslotDrawerProps> = ({ isOpen, onClose }) => {
                     <button
                         disabled={hasTimeError() || isSubmitting}
                         onClick={handleConfirmTimeslot}
-                        className="w-full h-12 rounded-xl btn-gradient text-white font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-40 disabled:pointer-events-none hover:scale-[1.01] active:scale-95 transition-transform shadow-lg shadow-primary/25"
+                        className="w-full h-12 rounded-xl btn-gradient text-white font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-40 disabled:pointer-events-none hover:scale-[1.01] transition-transform shadow-lg shadow-primary/25"
                     >
                         <span className="material-symbols-outlined text-[18px]">
                             {isRecurring ? 'repeat' : 'check'}

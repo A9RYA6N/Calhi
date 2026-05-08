@@ -16,8 +16,8 @@ function formatRecurringTooltip(slot: Timeslot): string {
 }
 
 const HOUR_HEIGHT = 80; // px per hour
-const START_HOUR = 0;   // 12:00 AM
-const END_HOUR = 24;    // midnight → full 24 hours
+const START_HOUR = 0; // 12:00 AM
+const END_HOUR = 24; // midnight → full 24 hours
 const HOURS = Array.from({ length: END_HOUR - START_HOUR }, (_, i) => START_HOUR + i);
 const TOTAL_HEIGHT = END_HOUR * HOUR_HEIGHT; // 1920px
 
@@ -96,9 +96,9 @@ const WeeklyCalendarGrid: React.FC<WeeklyCalendarGridProps> = ({ timeslots, book
 
     return (
         /* 
-         * Outer wrapper: fills the parent exactly (parent must have a concrete height).
-         * flex-col so the sticky header + scrollable body stack vertically.
-         */
+        * Outer wrapper: fills the parent exactly (parent must have a concrete height).
+        * flex-col so the sticky header + scrollable body stack vertically.
+        */
         <div className="flex flex-col h-full w-full overflow-hidden">
 
             {/* ── Sticky day-name header ── */}
@@ -174,7 +174,7 @@ const WeeklyCalendarGrid: React.FC<WeeklyCalendarGridProps> = ({ timeslots, book
                                 return (
                                     <div
                                         key={slot.ID}
-                                        className="absolute left-1 right-1 z-10 cursor-pointer rounded-lg gradient-slot p-2 transition-all group/slot hover:shadow-lg hover:shadow-primary/10 hover:brightness-110"
+                                        className="absolute left-1 right-1 z-10 cursor-pointer rounded-lg gradient-slot p-2 transition-all group/slot /10 hover:brightness-110"
                                         style={getBlockStyle(slot.StartsAt, slot.EndsAt)}
                                         onClick={() => navigate(`/dashboard/timeslots/${slot.ID}`)}
                                         title={slot.IsRecurring ? formatRecurringTooltip(slot) : undefined}

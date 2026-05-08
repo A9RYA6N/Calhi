@@ -5,20 +5,6 @@ import { useAppSelector } from '../store/hooks';
 import DashboardSidebar from "../components/DashboardComponents/DashboardSidebar";
 import DashboardHeader from "../components/DashboardComponents/DashboardHeader";
 
-// Generate deterministic avatar gradient from name
-function getAvatarGradient(name: string): string {
-    const gradients = [
-        'from-violet-500/30 to-blue-500/30',
-        'from-orange-500/30 to-red-500/30',
-        'from-cyan-500/30 to-blue-500/30',
-        'from-green-500/30 to-teal-500/30',
-        'from-pink-500/30 to-rose-500/30',
-        'from-amber-500/30 to-yellow-500/30',
-    ];
-    const idx = (name.charCodeAt(0) + (name.charCodeAt(1) || 0)) % gradients.length;
-    return gradients[idx];
-}
-
 function getInitials(name: string): string {
     const parts = name.trim().split(' ');
     return parts.length >= 2
@@ -28,9 +14,9 @@ function getInitials(name: string): string {
 
 const statusConfig: Record<string, { label: string; className: string }> = {
     confirmed: { label: 'Confirmed', className: 'bg-green-500/10 text-green-400' },
-    pending:   { label: 'Pending',   className: 'bg-yellow-500/10 text-yellow-400' },
-    arrived:   { label: 'Arrived',   className: 'bg-violet-500/10 text-violet-400' },
-    rejected:  { label: 'Rejected',  className: 'bg-red-500/10 text-red-400' },
+    pending: { label: 'Pending', className: 'bg-yellow-500/10 text-yellow-400' },
+    arrived: { label: 'Arrived', className: 'bg-violet-500/10 text-violet-400' },
+    rejected: { label: 'Rejected', className: 'bg-red-500/10 text-red-400' },
 };
 
 const TimeslotDetailPage = () => {
@@ -56,11 +42,11 @@ const TimeslotDetailPage = () => {
     if (!timeslot) {
         return (
             <div className="flex h-screen w-full bg-[#0f0f0f] text-white font-body">
-                <DashboardSidebar userName={userName} onNewTimeslot={() => {}} />
+                <DashboardSidebar userName={userName} onNewTimeslot={() => { }} />
                 <main className="flex flex-1 items-center justify-center flex-col gap-4">
                     <span className="material-symbols-outlined text-5xl text-[#9ca3af]">event_busy</span>
                     <p className="text-white font-bold text-lg">Timeslot not found</p>
-                    <Link to="/dashboard/timeslots" className="text-sm text-violet-400 hover:underline">
+                    <Link to="/dashboard/timeslots" className="text-sm text-[#9ca3af]">
                         ← Back to My Schedule
                     </Link>
                 </main>
@@ -73,12 +59,10 @@ const TimeslotDetailPage = () => {
 
     return (
         <div className="flex h-screen w-full overflow-hidden bg-[#0f0f0f] text-white font-body antialiased">
-            <DashboardSidebar userName={userName} onNewTimeslot={() => {}} />
+            <DashboardSidebar userName={userName} onNewTimeslot={() => { }} />
 
             <main className="flex flex-1 flex-col overflow-hidden relative">
-                {/* Ambient glows */}
-                <div className="fixed top-1/2 -left-32 w-[500px] h-[500px] bg-violet-600/5 rounded-full blur-[120px] pointer-events-none -z-10" />
-                <div className="fixed bottom-0 right-0 w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-[140px] pointer-events-none -z-10" />
+
 
                 <DashboardHeader userName={userName} />
 
@@ -87,7 +71,7 @@ const TimeslotDetailPage = () => {
                     <nav className="flex items-center gap-2 mb-6">
                         <Link
                             to="/dashboard/timeslots"
-                            className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9ca3af] hover:text-violet-400 transition-colors cursor-pointer"
+                            className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9ca3af] -400 transition-colors cursor-pointer"
                         >
                             My Schedule
                         </Link>
@@ -96,7 +80,7 @@ const TimeslotDetailPage = () => {
                             {timeslot.EventName || 'Timeslot'}
                         </span>
                         <span className="material-symbols-outlined text-[14px] text-[#9ca3af]/40">chevron_right</span>
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-400">Details</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9ca3af]">Details</span>
                     </nav>
 
                     {/* Page header */}
@@ -104,20 +88,17 @@ const TimeslotDetailPage = () => {
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                             <div>
                                 <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white mb-2">
-                                    Timeslot{' '}
-                                    <span className="bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent">
-                                        Details
-                                    </span>
+                                    Timeslot Details
                                 </h1>
                                 <p className="text-[#9ca3af] text-base">
                                     Detailed overview and booking management for the selected interval.
                                 </p>
                             </div>
                             <div className="flex items-center gap-3">
-                                <button className="px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-widest text-[#9ca3af] border border-white/10 hover:bg-white/5 hover:text-white transition-all">
+                                <button className="px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-widest text-[#9ca3af] border border-white/10 transition-all">
                                     Archive Slot
                                 </button>
-                                <button className="px-6 py-2.5 rounded-xl text-sm font-black uppercase tracking-widest btn-gradient text-white active:scale-95 transition-transform">
+                                <button className="px-6 py-2.5 rounded-xl text-sm font-black uppercase tracking-widest btn-gradient text-white transition-transform">
                                     Share Slot
                                 </button>
                             </div>
@@ -130,16 +111,14 @@ const TimeslotDetailPage = () => {
                         <section className="lg:col-span-1">
                             <div className="glass-card rounded-xl p-8 relative overflow-hidden group">
                                 {/* Ambient glow inside card */}
-                                <div className="absolute -right-16 -top-16 w-64 h-64 bg-violet-600/10 rounded-full blur-[80px] group-hover:bg-violet-600/20 transition-colors duration-500 pointer-events-none" />
-
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-400 mb-8">
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9ca3af] mb-8">
                                     Slot Overview
                                 </h3>
 
                                 <div className="space-y-8 relative z-10">
                                     {/* Event name */}
                                     <div className="flex items-start gap-4">
-                                        <div className="w-12 h-12 rounded-xl bg-[#171717] flex items-center justify-center text-violet-400 border border-white/5 shadow-xl shrink-0">
+                                        <div className="w-12 h-12 rounded-xl bg-[#171717] flex items-center justify-center text-[#9ca3af] border border-white/5 shrink-0">
                                             <span className="material-symbols-outlined">calendar_month</span>
                                         </div>
                                         <div>
@@ -150,7 +129,7 @@ const TimeslotDetailPage = () => {
 
                                     {/* Date */}
                                     <div className="flex items-start gap-4">
-                                        <div className="w-12 h-12 rounded-xl bg-[#171717] flex items-center justify-center text-violet-400 border border-white/5 shadow-xl shrink-0">
+                                        <div className="w-12 h-12 rounded-xl bg-[#171717] flex items-center justify-center text-[#9ca3af] border border-white/5 shrink-0">
                                             <span className="material-symbols-outlined">event</span>
                                         </div>
                                         <div>
@@ -184,7 +163,7 @@ const TimeslotDetailPage = () => {
                                     {/* Duration */}
                                     {timeslot.Duration && (
                                         <div className="flex items-start gap-4">
-                                            <div className="w-12 h-12 rounded-xl bg-[#171717] flex items-center justify-center text-violet-400 border border-white/5 shadow-xl shrink-0">
+                                            <div className="w-12 h-12 rounded-xl bg-[#171717] flex items-center justify-center text-[#9ca3af] border border-white/5 shrink-0">
                                                 <span className="material-symbols-outlined">hourglass_empty</span>
                                             </div>
                                             <div>
@@ -201,7 +180,7 @@ const TimeslotDetailPage = () => {
                                                 <span className="material-symbols-outlined text-sm text-green-400">sync</span>
                                                 <span className="text-sm font-bold text-white">Recurring Status</span>
                                             </div>
-                                            <span className="px-3 py-1 rounded-full bg-primary/20 text-primary text-[9px] font-black uppercase tracking-widest">
+                                            <span className="px-3 py-1 rounded-full bg-[#2e2839] text-[#9ca3af] text-[9px] font-black uppercase tracking-widest">
                                                 One-time
                                             </span>
                                         </div>
@@ -210,10 +189,10 @@ const TimeslotDetailPage = () => {
 
                                 {/* CTA buttons */}
                                 <div className="mt-10 flex flex-col gap-3 relative z-10">
-                                    <button className="w-full btn-gradient py-4 rounded-xl text-sm font-black uppercase tracking-widest text-white hover:scale-[1.01] active:scale-95 transition-all">
+                                    <button className="w-full btn-gradient py-4 rounded-xl text-sm font-black uppercase tracking-widest text-white transition-all">
                                         Update Slot
                                     </button>
-                                    <button className="w-full py-4 rounded-xl text-sm font-bold uppercase tracking-widest text-red-400 border border-red-500/20 hover:bg-red-500/10 hover:border-red-500 transition-all">
+                                    <button className="w-full py-4 rounded-xl text-sm font-bold uppercase tracking-widest text-red-400 border border-red-500/20 -500/10 -500 transition-all">
                                         Delete Slot
                                     </button>
                                 </div>
@@ -226,14 +205,14 @@ const TimeslotDetailPage = () => {
                                 {/* Header */}
                                 <div className="flex items-center justify-between mb-8">
                                     <div>
-                                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-violet-400 mb-1">
+                                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9ca3af] mb-1">
                                             Bookings on this Slot
                                         </h3>
                                         <p className="text-sm text-[#9ca3af]">
                                             {bookings.length} booking{bookings.length !== 1 ? 's' : ''} filled
                                         </p>
                                     </div>
-                                    <button className="text-xs font-bold text-violet-400 hover:text-violet-300 underline underline-offset-4 transition-colors">
+                                    <button className="text-xs font-bold text-[#9ca3af] underline underline-offset-4">
                                         Export Attendance
                                     </button>
                                 </div>
@@ -257,13 +236,12 @@ const TimeslotDetailPage = () => {
                                                 {bookings.map(booking => {
                                                     const status = booking.Status?.toLowerCase() || 'pending';
                                                     const cfg = statusConfig[status] || statusConfig.pending;
-                                                    const gradient = getAvatarGradient(booking.ClientName || '?');
                                                     const initials = getInitials(booking.ClientName || '?');
                                                     return (
-                                                        <tr key={booking.ID} className="group hover:bg-white/[0.02] transition-colors">
+                                                        <tr key={booking.ID} className="group .02] transition-colors">
                                                             <td className="py-5">
                                                                 <div className="flex items-center gap-3">
-                                                                    <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${gradient} border border-white/10 flex items-center justify-center font-bold text-sm text-white shrink-0`}>
+                                                                    <div className="w-10 h-10 rounded-full bg-[#2e2839] border border-white/10 flex items-center justify-center font-bold text-sm text-white shrink-0">
                                                                         {initials}
                                                                     </div>
                                                                     <span className="font-bold text-white tracking-tight">{booking.ClientName}</span>
@@ -279,7 +257,7 @@ const TimeslotDetailPage = () => {
                                                                 </span>
                                                             </td>
                                                             <td className="py-5 text-right">
-                                                                <button className="text-[#9ca3af] hover:text-white transition-colors">
+                                                                <button className="text-[#9ca3af] transition-colors">
                                                                     <span className="material-symbols-outlined">more_vert</span>
                                                                 </button>
                                                             </td>
@@ -298,8 +276,8 @@ const TimeslotDetailPage = () => {
                                 )}
 
                                 {/* Add manual booking */}
-                                <div className="mt-10 p-6 rounded-xl border border-dashed border-white/10 flex flex-col items-center justify-center text-center group hover:border-violet-500/50 transition-colors cursor-pointer">
-                                    <div className="w-12 h-12 rounded-full bg-[#171717] flex items-center justify-center text-violet-400 mb-3 group-hover:scale-110 transition-transform">
+                                <div className="mt-10 p-6 rounded-xl border border-dashed border-white/10 flex flex-col items-center justify-center text-center group -500/50 transition-colors cursor-pointer">
+                                    <div className="w-12 h-12 rounded-full bg-[#171717] flex items-center justify-center text-[#9ca3af] mb-3">
                                         <span className="material-symbols-outlined">person_add</span>
                                     </div>
                                     <p className="font-bold text-white">Add Manual Booking</p>

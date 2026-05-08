@@ -34,7 +34,7 @@ const ShowBookings = () => {
                                         Upcoming
                                         <span className="ml-2 px-2 py-0.5 rounded bg-primary/20 text-[10px] text-primary">2</span>
                                     </button>
-                                    <button className="pb-4 text-gray-500 font-medium hover:text-gray-300 transition-colors">
+                                    <button className="pb-4 text-gray-500 font-medium -300 transition-colors">
                                         Past
                                     </button>
                                 </div>
@@ -48,7 +48,7 @@ const ShowBookings = () => {
                                     const endDate = new Date(booking.EndsAt);
 
                                     return (
-                                        <div key={booking.ID} className="bg-[#171717]/40 backdrop-blur-2xl border border-white/5 rounded-2xl p-6 group hover:border-primary/20 transition-all duration-300 flex items-center justify-between">
+                                        <div key={booking.ID} className="bg-[#171717]/40 backdrop-blur-2xl border border-white/5 rounded-2xl p-6 group transition-all duration-300 flex items-center justify-between">
                                             <div className="flex items-center gap-8">
                                                 <div className="w-20 text-center py-2 rounded-xl bg-white/5 border border-white/5">
                                                     <span className="block text-[10px] font-black uppercase tracking-widest text-gray-500">{format(startDate, 'MMM')}</span>
@@ -70,10 +70,10 @@ const ShowBookings = () => {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-4">
-                                                <button className="px-6 py-2.5 rounded-xl border border-white/10 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/5 transition-all active:scale-95">
+                                                <button className="px-6 py-2.5 rounded-xl border border-white/10 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all ">
                                                     Details
                                                 </button>
-                                                <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#171717]/40 text-gray-500 hover:text-primary transition-colors">
+                                                <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#171717]/40 text-gray-500 transition-colors">
                                                     <span className="material-symbols-outlined">more_vert</span>
                                                 </button>
                                             </div>

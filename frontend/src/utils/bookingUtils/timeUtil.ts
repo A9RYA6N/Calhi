@@ -16,7 +16,7 @@ export const getIntervals = (timeslot: any) => {
                 const bEnd = new Date(booking.EndsAt);
                 return current >= bStart && current < bEnd;
             });
-            
+
             if (!isBooked) {
                 intervals.push({ start: current, end: next });
             }
