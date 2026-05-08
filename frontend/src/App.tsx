@@ -10,6 +10,8 @@ import Verify from './pages/Verify'
 import ShowBookings from './pages/ShowBookings'
 import ShowTimeslots from './pages/ShowTimeslots'
 import TimeslotDetailPage from './pages/TimeslotDetailPage'
+import UseCasesPage from './pages/UseCasesPage'
+import PricingPage from './pages/PricingPage'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Toaster } from 'react-hot-toast'
 
@@ -21,6 +23,8 @@ function App() {
                 <Route path='/' element={<HomePage />} />
                 <Route path='/login' element={<Login />} />
                 <Route path='/register' element={<Register />} />
+                <Route path='/uses' element={<UseCasesPage />} />
+                <Route path='/pricing' element={<PricingPage />} />
                 <Route path='/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                 <Route path='/dashboard/bookings' element={<ProtectedRoute><ShowBookings /></ProtectedRoute>} />
                 <Route path='/dashboard/timeslots' element={<ProtectedRoute><ShowTimeslots /></ProtectedRoute>} />
