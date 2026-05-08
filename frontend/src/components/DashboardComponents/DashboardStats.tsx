@@ -16,13 +16,6 @@ const DashboardStats = ({ timeslotsCount }: DashboardStatsProps) => {
                         <span className="material-symbols-outlined">event_available</span>
                     </div>
                 </div>
-                <div className="mt-4 flex items-center gap-2">
-                    <span className="flex items-center text-xs font-semibold text-[#0bda6f] bg-[#0bda6f]/10 px-1.5 py-0.5 rounded">
-                        <span className="material-symbols-outlined text-[14px] mr-0.5">trending_up</span>
-                        12%
-                    </span>
-                    <span className="text-xs text-[#a79db9]">vs last week</span>
-                </div>
             </div>
 
             {/* Card 2 */}

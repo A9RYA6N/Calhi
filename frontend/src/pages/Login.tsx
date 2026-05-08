@@ -113,6 +113,19 @@ const Login = () => {
                                 <span>{isLoading ? 'Logging In...' : 'Log In'}</span>
                                 {!isLoading && <span className="material-symbols-outlined text-lg">arrow_forward</span>}
                             </button>
+                            
+                            <button 
+                                type="button"
+                                onClick={() => {
+                                    setEmail("aryanburnwal8@gmail.com");
+                                    setPassword("Aryan123");
+                                }}
+                                className="w-full bg-[#171717] border border-white/5 text-gray-300 font-bold py-3.5 rounded-xl hover:bg-white/10 hover:text-white transition-all active:scale-[0.98] flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+                                disabled={isLoading}
+                            >
+                                <span className="material-symbols-outlined text-[18px]">magic_button</span>
+                                <span>Autofill Demo Credentials</span>
+                            </button>
                         </form>
 
                         <div className="mt-8 pt-8 border-t border-white/5 text-center">

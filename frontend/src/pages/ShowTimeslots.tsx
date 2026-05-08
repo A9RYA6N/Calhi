@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { format, startOfWeek, addDays, addWeeks, subWeeks } from 'date-fns';
+import { Link } from 'react-router-dom';
 import { useAppSelector } from '../store/hooks';
 import DashboardSidebar from "../components/DashboardComponents/DashboardSidebar";
 import DashboardHeader from "../components/DashboardComponents/DashboardHeader";
@@ -22,6 +23,7 @@ const ShowTimeslots = () => {
     const timeslots = useAppSelector(state => state.timeslot.timeslots);
     const bookings = useAppSelector(state => state.booking.bookings);
     const userName = user?.Name || "Guest";
+    const userSlug = user?.Username || user?.username || user?.UserName || '';
 
     // Booking count per timeslot
     const bookingCountMap = useMemo(() =>
@@ -65,6 +67,15 @@ const ShowTimeslots = () => {
                             </div>
 
                             <div className="flex items-center gap-3">
+                                <Link 
+                                    to={`/${userSlug}`} 
+                                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#171717] border border-white/5 hover:bg-white/10 transition-colors text-white text-sm font-bold shadow-lg"
+                                    target="_blank"
+                                >
+                                    <span className="material-symbols-outlined text-[18px]">public</span>
+                                    Show booking page
+                                </Link>
+
                                 {/* Month label + week nav */}
                                 <div className="flex items-center gap-2">
                                     <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#171717] border border-white/5 text-white text-sm font-medium hover:border-primary/30 transition-colors">
